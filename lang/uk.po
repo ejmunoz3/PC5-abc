@@ -291,8 +291,8 @@ msgid "PC5 ran out of memory planning the work."
 msgstr "PC5 забракло пам’яті, щоб підготувати роботу."
 
 #: title/pc5_files.c:385 title/pc5_files.c:406 title/pc5_files.c:419
-#: title/pc5_library.c:2440 title/pc5_library.c:2529 title/pc5_library.c:2953
-#: title/pc5_library.c:2968 title/pc5_library.c:2974
+#: title/pc5_library.c:2444 title/pc5_library.c:2533 title/pc5_library.c:2957
+#: title/pc5_library.c:2972 title/pc5_library.c:2978
 #, c-format
 msgid "PC5 can't write %s: %s."
 msgstr "PC5 не може записати %s: %s."
@@ -302,7 +302,7 @@ msgstr "PC5 не може записати %s: %s."
 msgid "PC5 ran out of memory copying %s."
 msgstr "PC5 забракло пам’яті під час копіювання %s."
 
-#: title/pc5_files.c:427 title/pc5_library.c:1854
+#: title/pc5_files.c:427 title/pc5_library.c:1858
 #, c-format
 msgid "PC5 can't put %s in place: %s."
 msgstr "PC5 не може поставити %s на місце: %s."
@@ -398,7 +398,7 @@ msgstr ""
 "Підключіть USB-накопичувач із %.100s: гра запускається з нього з папки "
 "%.200s."
 
-#: title/pc5_library.c:175 title/pc5_library.c:2849 title/pc5_library.c:2900
+#: title/pc5_library.c:175 title/pc5_library.c:2853 title/pc5_library.c:2904
 #, c-format
 msgid "PC5 can't make the game's folder: %s."
 msgstr "PC5 не може створити папку гри: %s."
@@ -408,166 +408,166 @@ msgstr "PC5 не може створити папку гри: %s."
 msgid "PC5 can't link the game's folder on the USB drive: %s."
 msgstr "PC5 не може зв’язати папку гри на USB-накопичувачі: %s."
 
-#: title/pc5_library.c:589 title/pc5_library.c:606
+#: title/pc5_library.c:593 title/pc5_library.c:610
 msgid "Choose one of the game's programs."
 msgstr "Виберіть одну з програм гри."
 
-#: title/pc5_library.c:602 title/pc5_library.c:752 title/pc5_library.c:976
+#: title/pc5_library.c:606 title/pc5_library.c:756 title/pc5_library.c:980
 msgid "PC5's notes on this game are missing."
 msgstr "Нотатки PC5 про цю гру зникли."
 
-#: title/pc5_library.c:614
+#: title/pc5_library.c:618
 msgid "That program is too deep in the game's folder for Windows."
 msgstr "Ця програма лежить у папці гри надто глибоко для Windows."
 
-#: title/pc5_library.c:619 title/pc5_library.c:1871 title/pc5_library.c:2584
-#: title/pc5_library.c:2587 title/pc5_library.c:2596 title/pc5_library.c:2670
-#: title/pc5_library.c:2862
+#: title/pc5_library.c:623 title/pc5_library.c:1875 title/pc5_library.c:2588
+#: title/pc5_library.c:2591 title/pc5_library.c:2600 title/pc5_library.c:2674
+#: title/pc5_library.c:2866
 #, c-format
 msgid "PC5 can't write its notes: %s."
 msgstr "PC5 не може записати свої нотатки: %s."
 
-#: title/pc5_library.c:640
+#: title/pc5_library.c:644
 msgid "PC5 is out of memory."
 msgstr "PC5 бракує пам’яті."
 
-#: title/pc5_library.c:644
+#: title/pc5_library.c:648
 #, c-format
 msgid "%.200s doesn't start any of the game's programs."
 msgstr "%.200s не запускає жодної з програм гри."
 
-#: title/pc5_library.c:844
+#: title/pc5_library.c:848
 msgid "The game's launch options are too long: 511 characters at most."
 msgstr "Параметри запуску гри задовгі: не більше 511 символів."
 
-#: title/pc5_library.c:861
+#: title/pc5_library.c:865
 msgid "The game's path is too long for Windows."
 msgstr "Шлях до гри задовгий для Windows."
 
-#: title/pc5_library.c:877 title/pc5_library.c:1055
+#: title/pc5_library.c:881 title/pc5_library.c:1059
 #, c-format
 msgid "PC5 can't write the game's profile: %s."
 msgstr "PC5 не може записати профіль гри: %s."
 
-#: title/pc5_library.c:1001
+#: title/pc5_library.c:1005
 #, c-format
 msgid "The program its launcher started isn't one of the game's: %.200s"
 msgstr "Програма, яку запустив лаунчер, не з цієї гри: %.200s"
 
-#: title/pc5_library.c:1015
+#: title/pc5_library.c:1019
 msgid "The arguments its launcher gave are too long."
 msgstr "Аргументи від лаунчера задовгі."
 
-#: title/pc5_library.c:1037
+#: title/pc5_library.c:1041
 #, c-format
 msgid "Its programs kept starting each other: %d hand-offs in a row."
 msgstr "Програми гри запускали одна одну по колу: передач поспіль: %d."
 
-#: title/pc5_library.c:1051
+#: title/pc5_library.c:1055
 msgid "The program's path is too long for Windows."
 msgstr "Шлях до програми задовгий для Windows."
 
-#: title/pc5_library.c:1110
+#: title/pc5_library.c:1114
 #, c-format
 msgid "Its profile has a mistake (%s)."
 msgstr "У профілі помилка (%s)."
 
-#: title/pc5_library.c:1127
+#: title/pc5_library.c:1131
 msgid "Its Windows folder is missing."
 msgstr "Папка Windows зникла."
 
-#: title/pc5_library.c:1267
+#: title/pc5_library.c:1271
 #, c-format
 msgid "PC5 can't delete %s: %s."
 msgstr "PC5 не може видалити %s: %s."
 
-#: title/pc5_library.c:1366 title/pc5_library.c:1641 title/pc5_library.c:1696
+#: title/pc5_library.c:1370 title/pc5_library.c:1645 title/pc5_library.c:1700
 #, c-format
 msgid "PC5 can't move the game's folder: %s."
 msgstr "PC5 не може перемістити папку гри: %s."
 
-#: title/pc5_library.c:1375 title/pc5_library.c:1646
+#: title/pc5_library.c:1379 title/pc5_library.c:1650
 #, c-format
 msgid "PC5 can't delete the game's profile: %s."
 msgstr "PC5 не може видалити профіль гри: %s."
 
-#: title/pc5_library.c:1389 title/pc5_library.c:1633 title/pc5_library.c:2735
-#: title/pc5_library.c:2743
+#: title/pc5_library.c:1393 title/pc5_library.c:1637 title/pc5_library.c:2739
+#: title/pc5_library.c:2747
 msgid "A path is too long."
 msgstr "Шлях задовгий."
 
-#: title/pc5_library.c:1592
+#: title/pc5_library.c:1596
 msgid "PC5 can't read the game's folder."
 msgstr "PC5 не може прочитати папку гри."
 
-#: title/pc5_library.c:1600 title/pc5_library.c:1851 title/pc5_library.c:2930
+#: title/pc5_library.c:1604 title/pc5_library.c:1855 title/pc5_library.c:2934
 #, c-format
 msgid "A path in the game is too long: %s."
 msgstr "Шлях у грі задовгий: %s."
 
-#: title/pc5_library.c:1609
+#: title/pc5_library.c:1613
 #, c-format
 msgid "PC5 can't keep %s: %s."
 msgstr "PC5 не може зберегти %s: %s."
 
-#: title/pc5_library.c:1665
+#: title/pc5_library.c:1669
 #, c-format
 msgid "PC5 can't put the saves in place: %s."
 msgstr "PC5 не може повернути збереження на місце: %s."
 
-#: title/pc5_library.c:1679
+#: title/pc5_library.c:1683
 msgid "This game's saves can't be kept apart from it."
 msgstr "Збереження цієї гри не можна тримати окремо від неї."
 
-#: title/pc5_library.c:1685
+#: title/pc5_library.c:1689
 #, c-format
 msgid "PC5 can't make its saves folder: %s."
 msgstr "PC5 не може створити папку для збережень: %s."
 
-#: title/pc5_library.c:1689
+#: title/pc5_library.c:1693
 msgid "PC5 is still keeping this game's saves from before: start PC5 again."
 msgstr "PC5 ще зберігає попередні збереження цієї гри: запустіть PC5 знову."
 
-#: title/pc5_library.c:1722
+#: title/pc5_library.c:1726
 #, c-format
 msgid "PC5 can't move the saves: %s."
 msgstr "PC5 не може перемістити збереження: %s."
 
-#: title/pc5_library.c:1809
+#: title/pc5_library.c:1813
 #, c-format
 msgid "A path in the update is too long: %s."
 msgstr "Шлях в оновленні задовгий: %s."
 
-#: title/pc5_library.c:1891
+#: title/pc5_library.c:1895
 #, c-format
 msgid "PC5 can't write the game's list of files: %s."
 msgstr "PC5 не може записати список файлів гри: %s."
 
-#: title/pc5_library.c:2209
+#: title/pc5_library.c:2213
 msgid ""
 "PC5's Windows template is missing from the app: copy the PC5 folder again."
 msgstr ""
 "У застосунку немає шаблону Windows для PC5: скопіюйте папку PC5 ще раз."
 
-#: title/pc5_library.c:2233
+#: title/pc5_library.c:2237
 msgid "PC5's Windows template is damaged: copy the PC5 folder again."
 msgstr "Шаблон Windows для PC5 пошкоджений: скопіюйте папку PC5 ще раз."
 
-#: title/pc5_library.c:2315 title/pc5_library.c:2375
+#: title/pc5_library.c:2319 title/pc5_library.c:2379
 #, c-format
 msgid "PC5 can't make its folders in %s: %s."
 msgstr "PC5 не може створити свої папки в %s: %s."
 
-#: title/pc5_library.c:2326
+#: title/pc5_library.c:2330
 #, c-format
 msgid "PC5 can't make its folder on the USB drive: %s."
 msgstr "PC5 не може створити свою папку на USB-накопичувачі: %s."
 
-#: title/pc5_library.c:2329
+#: title/pc5_library.c:2333
 msgid "PC5 can't name the game's folder on the USB drive."
 msgstr "PC5 не може дати назву папці гри на USB-накопичувачі."
 
-#: title/pc5_library.c:2347
+#: title/pc5_library.c:2351
 #, c-format
 msgid ""
 "The drive reads at %.0f MB/s here, too slow to play from (%.0f needed). "
@@ -578,25 +578,25 @@ msgstr ""
 "з нього (потрібно %.0f). Підключіть його до порту ззаду або до переднього "
 "порту USB-C. Встановлення на консоль усе одно працює."
 
-#: title/pc5_library.c:2355
+#: title/pc5_library.c:2359
 #, c-format
 msgid ""
 "Not enough space on the USB drive: the game needs %s and it has %s free."
 msgstr "Бракує місця на USB-накопичувачі: грі потрібно %s, а вільно %s."
 
-#: title/pc5_library.c:2359
+#: title/pc5_library.c:2363
 msgid ""
 "Only a game on a USB drive can play from it: this folder isn't on one."
 msgstr ""
 "Запускати з USB-накопичувача можна лише гру, яка на ньому лежить, а ця "
 "папка не на ньому."
 
-#: title/pc5_library.c:2361
+#: title/pc5_library.c:2365
 msgid "A game in PC5's INSTALL folder is installed, not played from there."
 msgstr ""
 "Гра з папки INSTALL для PC5 встановлюється, а не запускається звідти."
 
-#: title/pc5_library.c:2366
+#: title/pc5_library.c:2370
 #, c-format
 msgid ""
 "The drive reads at %.0f MB/s in this USB port, too slow to play from (at "
@@ -609,85 +609,85 @@ msgstr ""
 "PS5 повільний — передній порт USB-A: підключіть накопичувач до порту ззаду "
 "або до переднього порту USB-C. Встановлення з цього порту все одно працює."
 
-#: title/pc5_library.c:2372
+#: title/pc5_library.c:2376
 msgid "The game's program is too deep in its folder for Windows."
 msgstr "Програма гри лежить у її папці надто глибоко для Windows."
 
-#: title/pc5_library.c:2380
+#: title/pc5_library.c:2384
 #, c-format
 msgid "Not enough space: the game needs %s and the console has %s free."
 msgstr "Бракує місця: грі потрібно %s, а на консолі вільно %s."
 
-#: title/pc5_library.c:2383
+#: title/pc5_library.c:2387
 msgid "PC5 can't name the game."
 msgstr "PC5 не може дати грі назву."
 
-#: title/pc5_library.c:2386
+#: title/pc5_library.c:2390
 #, c-format
 msgid "PC5 can't start the install: %s."
 msgstr "PC5 не може почати встановлення: %s."
 
-#: title/pc5_library.c:2393 title/pc5_library.c:2466 title/pc5_library.c:2502
-#: title/pc5_library.c:2751
+#: title/pc5_library.c:2397 title/pc5_library.c:2470 title/pc5_library.c:2506
+#: title/pc5_library.c:2755
 msgid "Out of memory."
 msgstr "Бракує пам’яті."
 
-#: title/pc5_library.c:2426
+#: title/pc5_library.c:2430
 msgid "A path in the Windows template is too long."
 msgstr "Шлях у шаблоні Windows задовгий."
 
-#: title/pc5_library.c:2429 title/pc5_library.c:2434 title/pc5_library.c:2937
+#: title/pc5_library.c:2433 title/pc5_library.c:2438 title/pc5_library.c:2941
 #: title/pc5_tile.c:519
 #, c-format
 msgid "PC5 can't make %s: %s."
 msgstr "PC5 не може створити %s: %s."
 
-#: title/pc5_library.c:2437
+#: title/pc5_library.c:2441
 #, c-format
 msgid "PC5's Windows template is missing %s."
 msgstr "У шаблоні Windows для PC5 немає %s."
 
-#: title/pc5_library.c:2455
+#: title/pc5_library.c:2459
 #, c-format
 msgid "PC5 can't copy %s: %s."
 msgstr "PC5 не може скопіювати %s: %s."
 
-#: title/pc5_library.c:2480
+#: title/pc5_library.c:2484
 #, c-format
 msgid "PC5 can't read %s on the USB drive: %s."
 msgstr "PC5 не може прочитати %s на USB-накопичувачі: %s."
 
-#: title/pc5_library.c:2521 title/pc5_library.c:2947
+#: title/pc5_library.c:2525 title/pc5_library.c:2951
 #, c-format
 msgid "PC5 can't read back %s: %s."
 msgstr "PC5 не може прочитати назад %s: %s."
 
-#: title/pc5_library.c:2521
+#: title/pc5_library.c:2525
 #, c-format
 msgid "The USB drive stopped answering while PC5 copied %s (%s)."
 msgstr "USB-накопичувач перестав відповідати, поки PC5 копіював %s (%s)."
 
-#: title/pc5_library.c:2549 title/pc5_library.c:2561
+#: title/pc5_library.c:2553 title/pc5_library.c:2565
 #, c-format
 msgid ""
 "The game couldn't be put back in the INSTALL folder: it is in %.180s."
 msgstr "Гру не вдалося повернути в папку INSTALL: вона в %.180s."
 
-#: title/pc5_library.c:2600
+#: title/pc5_library.c:2604
 #, c-format
 msgid "PC5 can't save the cover: %s."
 msgstr "PC5 не може зберегти обкладинку: %s."
 
-#: title/pc5_library.c:2607
+#: title/pc5_library.c:2611
 #, c-format
 msgid "PC5 can't put the game in place: %s."
 msgstr "PC5 не може поставити гру на місце: %s."
 
-#: title/pc5_library.c:2716
+#: title/pc5_library.c:2720
 msgid "PC5 didn't install this game, so it can't update it."
 msgstr "Цю гру встановив не PC5, тож оновити її він не може."
 
-#: title/pc5_library.c:2718
+#: title/pc5_library.c:2722
 #, c-format
 msgid ""
 "%s plays from its USB drive: copy the newer version over its folder %s "
@@ -696,11 +696,11 @@ msgstr ""
 "%s запускається зі свого USB-накопичувача: скопіюйте нову версію поверх її "
 "папки %s на ньому."
 
-#: title/pc5_library.c:2723
+#: title/pc5_library.c:2727
 msgid "The game's folder is missing: uninstall it and install it again."
 msgstr "Папка гри зникла: видаліть гру й установіть її знову."
 
-#: title/pc5_library.c:2726
+#: title/pc5_library.c:2730
 #, c-format
 msgid ""
 "This folder doesn't have %s, the program %s starts. Choose the folder of a "
@@ -709,12 +709,12 @@ msgstr ""
 "У цій папці немає %s — програми, яку запускає %s. Виберіть папку новішої "
 "копії %s."
 
-#: title/pc5_library.c:2740
+#: title/pc5_library.c:2744
 #, c-format
 msgid "Not enough space: the update needs %s and the console has %s free."
 msgstr "Бракує місця: оновленню потрібно %s, а на консолі вільно %s."
 
-#: title/pc5_library.c:2746
+#: title/pc5_library.c:2750
 msgid ""
 "An earlier update of this game isn't finished: close PC5 and open it again "
 "to finish it."
@@ -722,41 +722,41 @@ msgstr ""
 "Попереднє оновлення цієї гри не завершено: закрийте PC5 і відкрийте знову, "
 "щоб його завершити."
 
-#: title/pc5_library.c:2748
+#: title/pc5_library.c:2752
 #, c-format
 msgid "PC5 can't start the update: %s."
 msgstr "PC5 не може почати оновлення: %s."
 
-#: title/pc5_library.c:2777
+#: title/pc5_library.c:2781
 msgid ""
 "Kept saves can't be put back for a game that plays from its USB drive."
 msgstr ""
 "Залишені збереження не можна повернути грі, яка запускається з "
 "USB-накопичувача."
 
-#: title/pc5_library.c:2781
+#: title/pc5_library.c:2785
 msgid "The install has begun already."
 msgstr "Встановлення вже почалося."
 
-#: title/pc5_library.c:2797
+#: title/pc5_library.c:2801
 msgid "PC5 can't read the kept saves."
 msgstr "PC5 не може прочитати залишені збереження."
 
-#: title/pc5_library.c:2797
+#: title/pc5_library.c:2801
 msgid "The kept saves are damaged: they have no registry."
 msgstr "Залишені збереження пошкоджені: у них немає реєстру."
 
-#: title/pc5_library.c:2874
+#: title/pc5_library.c:2878
 #, c-format
 msgid "PC5 can't make the game's folder on the USB drive: %s."
 msgstr "PC5 не може створити папку гри на USB-накопичувачі: %s."
 
-#: title/pc5_library.c:2947
+#: title/pc5_library.c:2951
 #, c-format
 msgid "PC5 can't open %s on the USB drive: %s."
 msgstr "PC5 не може відкрити %s на USB-накопичувачі: %s."
 
-#: title/pc5_library.c:2985
+#: title/pc5_library.c:2989
 #, c-format
 msgid ""
 "The copy of %s doesn't match the USB drive. The drive or its cable may be "

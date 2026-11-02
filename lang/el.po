@@ -291,8 +291,8 @@ msgid "PC5 ran out of memory planning the work."
 msgstr "Το PC5 έμεινε χωρίς μνήμη κατά τον σχεδιασμό της εργασίας."
 
 #: title/pc5_files.c:385 title/pc5_files.c:406 title/pc5_files.c:419
-#: title/pc5_library.c:2440 title/pc5_library.c:2529 title/pc5_library.c:2953
-#: title/pc5_library.c:2968 title/pc5_library.c:2974
+#: title/pc5_library.c:2444 title/pc5_library.c:2533 title/pc5_library.c:2957
+#: title/pc5_library.c:2972 title/pc5_library.c:2978
 #, c-format
 msgid "PC5 can't write %s: %s."
 msgstr "Το PC5 δεν μπορεί να γράψει το %s: %s."
@@ -302,7 +302,7 @@ msgstr "Το PC5 δεν μπορεί να γράψει το %s: %s."
 msgid "PC5 ran out of memory copying %s."
 msgstr "Το PC5 έμεινε χωρίς μνήμη κατά την αντιγραφή του %s."
 
-#: title/pc5_files.c:427 title/pc5_library.c:1854
+#: title/pc5_files.c:427 title/pc5_library.c:1858
 #, c-format
 msgid "PC5 can't put %s in place: %s."
 msgstr "Το PC5 δεν μπορεί να τοποθετήσει το %s: %s."
@@ -406,7 +406,7 @@ msgid ""
 msgstr ""
 "Συνδέστε τη μονάδα USB με το %.100s: παίζει από τον φάκελο %.200s σε αυτήν."
 
-#: title/pc5_library.c:175 title/pc5_library.c:2849 title/pc5_library.c:2900
+#: title/pc5_library.c:175 title/pc5_library.c:2853 title/pc5_library.c:2904
 #, c-format
 msgid "PC5 can't make the game's folder: %s."
 msgstr "Το PC5 δεν μπορεί να δημιουργήσει τον φάκελο του παιχνιδιού: %s."
@@ -417,181 +417,181 @@ msgid "PC5 can't link the game's folder on the USB drive: %s."
 msgstr ""
 "Το PC5 δεν μπορεί να συνδέσει τον φάκελο του παιχνιδιού στη μονάδα USB: %s."
 
-#: title/pc5_library.c:589 title/pc5_library.c:606
+#: title/pc5_library.c:593 title/pc5_library.c:610
 msgid "Choose one of the game's programs."
 msgstr "Επιλέξτε ένα από τα προγράμματα του παιχνιδιού."
 
-#: title/pc5_library.c:602 title/pc5_library.c:752 title/pc5_library.c:976
+#: title/pc5_library.c:606 title/pc5_library.c:756 title/pc5_library.c:980
 msgid "PC5's notes on this game are missing."
 msgstr "Οι σημειώσεις του PC5 για αυτό το παιχνίδι λείπουν."
 
-#: title/pc5_library.c:614
+#: title/pc5_library.c:618
 msgid "That program is too deep in the game's folder for Windows."
 msgstr ""
 "Αυτό το πρόγραμμα είναι πολύ βαθιά στον φάκελο του παιχνιδιού για τα "
 "Windows."
 
-#: title/pc5_library.c:619 title/pc5_library.c:1871 title/pc5_library.c:2584
-#: title/pc5_library.c:2587 title/pc5_library.c:2596 title/pc5_library.c:2670
-#: title/pc5_library.c:2862
+#: title/pc5_library.c:623 title/pc5_library.c:1875 title/pc5_library.c:2588
+#: title/pc5_library.c:2591 title/pc5_library.c:2600 title/pc5_library.c:2674
+#: title/pc5_library.c:2866
 #, c-format
 msgid "PC5 can't write its notes: %s."
 msgstr "Το PC5 δεν μπορεί να γράψει τις σημειώσεις του: %s."
 
-#: title/pc5_library.c:640
+#: title/pc5_library.c:644
 msgid "PC5 is out of memory."
 msgstr "Το PC5 δεν έχει αρκετή μνήμη."
 
-#: title/pc5_library.c:644
+#: title/pc5_library.c:648
 #, c-format
 msgid "%.200s doesn't start any of the game's programs."
 msgstr "Το %.200s δεν ξεκινά κανένα από τα προγράμματα του παιχνιδιού."
 
-#: title/pc5_library.c:844
+#: title/pc5_library.c:848
 msgid "The game's launch options are too long: 511 characters at most."
 msgstr ""
 "Οι επιλογές εκκίνησης του παιχνιδιού είναι πολύ μεγάλες: έως 511 "
 "χαρακτήρες."
 
-#: title/pc5_library.c:861
+#: title/pc5_library.c:865
 msgid "The game's path is too long for Windows."
 msgstr "Η διαδρομή του παιχνιδιού είναι πολύ μεγάλη για τα Windows."
 
-#: title/pc5_library.c:877 title/pc5_library.c:1055
+#: title/pc5_library.c:881 title/pc5_library.c:1059
 #, c-format
 msgid "PC5 can't write the game's profile: %s."
 msgstr "Το PC5 δεν μπορεί να γράψει το προφίλ του παιχνιδιού: %s."
 
-#: title/pc5_library.c:1001
+#: title/pc5_library.c:1005
 #, c-format
 msgid "The program its launcher started isn't one of the game's: %.200s"
 msgstr ""
 "Το πρόγραμμα που ξεκίνησε ο εκκινητής του δεν ανήκει στο παιχνίδι: %.200s"
 
-#: title/pc5_library.c:1015
+#: title/pc5_library.c:1019
 msgid "The arguments its launcher gave are too long."
 msgstr "Τα ορίσματα που έδωσε ο εκκινητής του είναι πολύ μεγάλα."
 
-#: title/pc5_library.c:1037
+#: title/pc5_library.c:1041
 #, c-format
 msgid "Its programs kept starting each other: %d hand-offs in a row."
 msgstr ""
 "Τα προγράμματά του ξεκινούσαν συνέχεια το ένα το άλλο: %d μεταβιβάσεις στη "
 "σειρά."
 
-#: title/pc5_library.c:1051
+#: title/pc5_library.c:1055
 msgid "The program's path is too long for Windows."
 msgstr "Η διαδρομή του προγράμματος είναι πολύ μεγάλη για τα Windows."
 
-#: title/pc5_library.c:1110
+#: title/pc5_library.c:1114
 #, c-format
 msgid "Its profile has a mistake (%s)."
 msgstr "Το προφίλ του έχει λάθος (%s)."
 
-#: title/pc5_library.c:1127
+#: title/pc5_library.c:1131
 msgid "Its Windows folder is missing."
 msgstr "Ο φάκελος Windows του λείπει."
 
-#: title/pc5_library.c:1267
+#: title/pc5_library.c:1271
 #, c-format
 msgid "PC5 can't delete %s: %s."
 msgstr "Το PC5 δεν μπορεί να διαγράψει το %s: %s."
 
-#: title/pc5_library.c:1366 title/pc5_library.c:1641 title/pc5_library.c:1696
+#: title/pc5_library.c:1370 title/pc5_library.c:1645 title/pc5_library.c:1700
 #, c-format
 msgid "PC5 can't move the game's folder: %s."
 msgstr "Το PC5 δεν μπορεί να μετακινήσει τον φάκελο του παιχνιδιού: %s."
 
-#: title/pc5_library.c:1375 title/pc5_library.c:1646
+#: title/pc5_library.c:1379 title/pc5_library.c:1650
 #, c-format
 msgid "PC5 can't delete the game's profile: %s."
 msgstr "Το PC5 δεν μπορεί να διαγράψει το προφίλ του παιχνιδιού: %s."
 
-#: title/pc5_library.c:1389 title/pc5_library.c:1633 title/pc5_library.c:2735
-#: title/pc5_library.c:2743
+#: title/pc5_library.c:1393 title/pc5_library.c:1637 title/pc5_library.c:2739
+#: title/pc5_library.c:2747
 msgid "A path is too long."
 msgstr "Μια διαδρομή είναι πολύ μεγάλη."
 
-#: title/pc5_library.c:1592
+#: title/pc5_library.c:1596
 msgid "PC5 can't read the game's folder."
 msgstr "Το PC5 δεν μπορεί να διαβάσει τον φάκελο του παιχνιδιού."
 
-#: title/pc5_library.c:1600 title/pc5_library.c:1851 title/pc5_library.c:2930
+#: title/pc5_library.c:1604 title/pc5_library.c:1855 title/pc5_library.c:2934
 #, c-format
 msgid "A path in the game is too long: %s."
 msgstr "Μια διαδρομή στο παιχνίδι είναι πολύ μεγάλη: %s."
 
-#: title/pc5_library.c:1609
+#: title/pc5_library.c:1613
 #, c-format
 msgid "PC5 can't keep %s: %s."
 msgstr "Το PC5 δεν μπορεί να κρατήσει το %s: %s."
 
-#: title/pc5_library.c:1665
+#: title/pc5_library.c:1669
 #, c-format
 msgid "PC5 can't put the saves in place: %s."
 msgstr "Το PC5 δεν μπορεί να τοποθετήσει τις αποθηκεύσεις: %s."
 
-#: title/pc5_library.c:1679
+#: title/pc5_library.c:1683
 msgid "This game's saves can't be kept apart from it."
 msgstr ""
 "Οι αποθηκεύσεις αυτού του παιχνιδιού δεν μπορούν να κρατηθούν χωριστά από "
 "αυτό."
 
-#: title/pc5_library.c:1685
+#: title/pc5_library.c:1689
 #, c-format
 msgid "PC5 can't make its saves folder: %s."
 msgstr "Το PC5 δεν μπορεί να δημιουργήσει τον φάκελο αποθηκεύσεων: %s."
 
-#: title/pc5_library.c:1689
+#: title/pc5_library.c:1693
 msgid "PC5 is still keeping this game's saves from before: start PC5 again."
 msgstr ""
 "Το PC5 κρατά ακόμα τις παλιότερες αποθηκεύσεις αυτού του παιχνιδιού: "
 "ξεκινήστε ξανά το PC5."
 
-#: title/pc5_library.c:1722
+#: title/pc5_library.c:1726
 #, c-format
 msgid "PC5 can't move the saves: %s."
 msgstr "Το PC5 δεν μπορεί να μετακινήσει τις αποθηκεύσεις: %s."
 
-#: title/pc5_library.c:1809
+#: title/pc5_library.c:1813
 #, c-format
 msgid "A path in the update is too long: %s."
 msgstr "Μια διαδρομή στην ενημέρωση είναι πολύ μεγάλη: %s."
 
-#: title/pc5_library.c:1891
+#: title/pc5_library.c:1895
 #, c-format
 msgid "PC5 can't write the game's list of files: %s."
 msgstr "Το PC5 δεν μπορεί να γράψει τη λίστα αρχείων του παιχνιδιού: %s."
 
-#: title/pc5_library.c:2209
+#: title/pc5_library.c:2213
 msgid ""
 "PC5's Windows template is missing from the app: copy the PC5 folder again."
 msgstr ""
 "Το πρότυπο Windows του PC5 λείπει από την εφαρμογή: αντιγράψτε ξανά τον "
 "φάκελο PC5."
 
-#: title/pc5_library.c:2233
+#: title/pc5_library.c:2237
 msgid "PC5's Windows template is damaged: copy the PC5 folder again."
 msgstr ""
 "Το πρότυπο Windows του PC5 είναι κατεστραμμένο: αντιγράψτε ξανά τον φάκελο "
 "PC5."
 
-#: title/pc5_library.c:2315 title/pc5_library.c:2375
+#: title/pc5_library.c:2319 title/pc5_library.c:2379
 #, c-format
 msgid "PC5 can't make its folders in %s: %s."
 msgstr "Το PC5 δεν μπορεί να δημιουργήσει τους φακέλους του στο %s: %s."
 
-#: title/pc5_library.c:2326
+#: title/pc5_library.c:2330
 #, c-format
 msgid "PC5 can't make its folder on the USB drive: %s."
 msgstr "Το PC5 δεν μπορεί να δημιουργήσει τον φάκελό του στη μονάδα USB: %s."
 
-#: title/pc5_library.c:2329
+#: title/pc5_library.c:2333
 msgid "PC5 can't name the game's folder on the USB drive."
 msgstr ""
 "Το PC5 δεν μπορεί να ονομάσει τον φάκελο του παιχνιδιού στη μονάδα USB."
 
-#: title/pc5_library.c:2347
+#: title/pc5_library.c:2351
 #, c-format
 msgid ""
 "The drive reads at %.0f MB/s here, too slow to play from (%.0f needed). "
@@ -602,7 +602,7 @@ msgstr ""
 "(χρειάζονται %.0f). Συνδέστε τη σε μια θύρα στο πίσω μέρος ή στη μπροστινή "
 "θύρα USB-C. Η εγκατάσταση στην κονσόλα λειτουργεί κανονικά."
 
-#: title/pc5_library.c:2355
+#: title/pc5_library.c:2359
 #, c-format
 msgid ""
 "Not enough space on the USB drive: the game needs %s and it has %s free."
@@ -610,20 +610,20 @@ msgstr ""
 "Δεν υπάρχει αρκετός χώρος στη μονάδα USB: το παιχνίδι χρειάζεται %s και η "
 "μονάδα έχει %s ελεύθερα."
 
-#: title/pc5_library.c:2359
+#: title/pc5_library.c:2363
 msgid ""
 "Only a game on a USB drive can play from it: this folder isn't on one."
 msgstr ""
 "Μόνο ένα παιχνίδι σε μονάδα USB μπορεί να παίξει από αυτήν: αυτός ο "
 "φάκελος δεν βρίσκεται σε μονάδα USB."
 
-#: title/pc5_library.c:2361
+#: title/pc5_library.c:2365
 msgid "A game in PC5's INSTALL folder is installed, not played from there."
 msgstr ""
 "Ένα παιχνίδι στον φάκελο INSTALL του PC5 εγκαθίσταται, δεν παίζεται από "
 "εκεί."
 
-#: title/pc5_library.c:2366
+#: title/pc5_library.c:2370
 #, c-format
 msgid ""
 "The drive reads at %.0f MB/s in this USB port, too slow to play from (at "
@@ -637,70 +637,70 @@ msgstr ""
 "μέρος ή στη μπροστινή θύρα USB-C. Η εγκατάσταση από αυτή τη θύρα "
 "λειτουργεί κανονικά."
 
-#: title/pc5_library.c:2372
+#: title/pc5_library.c:2376
 msgid "The game's program is too deep in its folder for Windows."
 msgstr ""
 "Το πρόγραμμα του παιχνιδιού είναι πολύ βαθιά στον φάκελό του για τα "
 "Windows."
 
-#: title/pc5_library.c:2380
+#: title/pc5_library.c:2384
 #, c-format
 msgid "Not enough space: the game needs %s and the console has %s free."
 msgstr ""
 "Δεν υπάρχει αρκετός χώρος: το παιχνίδι χρειάζεται %s και η κονσόλα έχει %s "
 "ελεύθερα."
 
-#: title/pc5_library.c:2383
+#: title/pc5_library.c:2387
 msgid "PC5 can't name the game."
 msgstr "Το PC5 δεν μπορεί να ονομάσει το παιχνίδι."
 
-#: title/pc5_library.c:2386
+#: title/pc5_library.c:2390
 #, c-format
 msgid "PC5 can't start the install: %s."
 msgstr "Το PC5 δεν μπορεί να ξεκινήσει την εγκατάσταση: %s."
 
-#: title/pc5_library.c:2393 title/pc5_library.c:2466 title/pc5_library.c:2502
-#: title/pc5_library.c:2751
+#: title/pc5_library.c:2397 title/pc5_library.c:2470 title/pc5_library.c:2506
+#: title/pc5_library.c:2755
 msgid "Out of memory."
 msgstr "Η μνήμη εξαντλήθηκε."
 
-#: title/pc5_library.c:2426
+#: title/pc5_library.c:2430
 msgid "A path in the Windows template is too long."
 msgstr "Μια διαδρομή στο πρότυπο Windows είναι πολύ μεγάλη."
 
-#: title/pc5_library.c:2429 title/pc5_library.c:2434 title/pc5_library.c:2937
+#: title/pc5_library.c:2433 title/pc5_library.c:2438 title/pc5_library.c:2941
 #: title/pc5_tile.c:519
 #, c-format
 msgid "PC5 can't make %s: %s."
 msgstr "Το PC5 δεν μπορεί να δημιουργήσει το %s: %s."
 
-#: title/pc5_library.c:2437
+#: title/pc5_library.c:2441
 #, c-format
 msgid "PC5's Windows template is missing %s."
 msgstr "Από το πρότυπο Windows του PC5 λείπει το %s."
 
-#: title/pc5_library.c:2455
+#: title/pc5_library.c:2459
 #, c-format
 msgid "PC5 can't copy %s: %s."
 msgstr "Το PC5 δεν μπορεί να αντιγράψει το %s: %s."
 
-#: title/pc5_library.c:2480
+#: title/pc5_library.c:2484
 #, c-format
 msgid "PC5 can't read %s on the USB drive: %s."
 msgstr "Το PC5 δεν μπορεί να διαβάσει το %s στη μονάδα USB: %s."
 
-#: title/pc5_library.c:2521 title/pc5_library.c:2947
+#: title/pc5_library.c:2525 title/pc5_library.c:2951
 #, c-format
 msgid "PC5 can't read back %s: %s."
 msgstr "Το PC5 δεν μπορεί να ξαναδιαβάσει το %s: %s."
 
-#: title/pc5_library.c:2521
+#: title/pc5_library.c:2525
 #, c-format
 msgid "The USB drive stopped answering while PC5 copied %s (%s)."
 msgstr ""
 "Η μονάδα USB σταμάτησε να αποκρίνεται ενώ το PC5 αντέγραφε το %s (%s)."
 
-#: title/pc5_library.c:2549 title/pc5_library.c:2561
+#: title/pc5_library.c:2553 title/pc5_library.c:2565
 #, c-format
 msgid ""
 "The game couldn't be put back in the INSTALL folder: it is in %.180s."
@@ -708,22 +708,22 @@ msgstr ""
 "Το παιχνίδι δεν μπόρεσε να επιστρέψει στον φάκελο INSTALL: βρίσκεται στο "
 "%.180s."
 
-#: title/pc5_library.c:2600
+#: title/pc5_library.c:2604
 #, c-format
 msgid "PC5 can't save the cover: %s."
 msgstr "Το PC5 δεν μπορεί να αποθηκεύσει το εξώφυλλο: %s."
 
-#: title/pc5_library.c:2607
+#: title/pc5_library.c:2611
 #, c-format
 msgid "PC5 can't put the game in place: %s."
 msgstr "Το PC5 δεν μπορεί να τοποθετήσει το παιχνίδι: %s."
 
-#: title/pc5_library.c:2716
+#: title/pc5_library.c:2720
 msgid "PC5 didn't install this game, so it can't update it."
 msgstr ""
 "Το PC5 δεν εγκατέστησε αυτό το παιχνίδι, οπότε δεν μπορεί να το ενημερώσει."
 
-#: title/pc5_library.c:2718
+#: title/pc5_library.c:2722
 #, c-format
 msgid ""
 "%s plays from its USB drive: copy the newer version over its folder %s "
@@ -732,13 +732,13 @@ msgstr ""
 "Το %s παίζει από τη μονάδα USB του: αντιγράψτε τη νεότερη έκδοση πάνω στον "
 "φάκελό του %s εκεί."
 
-#: title/pc5_library.c:2723
+#: title/pc5_library.c:2727
 msgid "The game's folder is missing: uninstall it and install it again."
 msgstr ""
 "Ο φάκελος του παιχνιδιού λείπει: απεγκαταστήστε το και εγκαταστήστε το "
 "ξανά."
 
-#: title/pc5_library.c:2726
+#: title/pc5_library.c:2730
 #, c-format
 msgid ""
 "This folder doesn't have %s, the program %s starts. Choose the folder of a "
@@ -747,14 +747,14 @@ msgstr ""
 "Αυτός ο φάκελος δεν έχει το %s, το πρόγραμμα που ξεκινά το %s. Επιλέξτε "
 "τον φάκελο ενός νεότερου αντιγράφου του %s."
 
-#: title/pc5_library.c:2740
+#: title/pc5_library.c:2744
 #, c-format
 msgid "Not enough space: the update needs %s and the console has %s free."
 msgstr ""
 "Δεν υπάρχει αρκετός χώρος: η ενημέρωση χρειάζεται %s και η κονσόλα έχει %s "
 "ελεύθερα."
 
-#: title/pc5_library.c:2746
+#: title/pc5_library.c:2750
 msgid ""
 "An earlier update of this game isn't finished: close PC5 and open it again "
 "to finish it."
@@ -762,44 +762,44 @@ msgstr ""
 "Μια παλιότερη ενημέρωση αυτού του παιχνιδιού δεν ολοκληρώθηκε: κλείστε το "
 "PC5 και ανοίξτε το ξανά για να ολοκληρωθεί."
 
-#: title/pc5_library.c:2748
+#: title/pc5_library.c:2752
 #, c-format
 msgid "PC5 can't start the update: %s."
 msgstr "Το PC5 δεν μπορεί να ξεκινήσει την ενημέρωση: %s."
 
-#: title/pc5_library.c:2777
+#: title/pc5_library.c:2781
 msgid ""
 "Kept saves can't be put back for a game that plays from its USB drive."
 msgstr ""
 "Οι αποθηκεύσεις που κρατήθηκαν δεν μπορούν να επιστρέψουν σε παιχνίδι που "
 "παίζει από τη μονάδα USB του."
 
-#: title/pc5_library.c:2781
+#: title/pc5_library.c:2785
 msgid "The install has begun already."
 msgstr "Η εγκατάσταση έχει ήδη ξεκινήσει."
 
-#: title/pc5_library.c:2797
+#: title/pc5_library.c:2801
 msgid "PC5 can't read the kept saves."
 msgstr "Το PC5 δεν μπορεί να διαβάσει τις αποθηκεύσεις που κρατήθηκαν."
 
-#: title/pc5_library.c:2797
+#: title/pc5_library.c:2801
 msgid "The kept saves are damaged: they have no registry."
 msgstr ""
 "Οι αποθηκεύσεις που κρατήθηκαν είναι κατεστραμμένες: δεν έχουν μητρώο."
 
-#: title/pc5_library.c:2874
+#: title/pc5_library.c:2878
 #, c-format
 msgid "PC5 can't make the game's folder on the USB drive: %s."
 msgstr ""
 "Το PC5 δεν μπορεί να δημιουργήσει τον φάκελο του παιχνιδιού στη μονάδα "
 "USB: %s."
 
-#: title/pc5_library.c:2947
+#: title/pc5_library.c:2951
 #, c-format
 msgid "PC5 can't open %s on the USB drive: %s."
 msgstr "Το PC5 δεν μπορεί να ανοίξει το %s στη μονάδα USB: %s."
 
-#: title/pc5_library.c:2985
+#: title/pc5_library.c:2989
 #, c-format
 msgid ""
 "The copy of %s doesn't match the USB drive. The drive or its cable may be "

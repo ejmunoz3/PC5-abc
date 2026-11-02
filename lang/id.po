@@ -293,8 +293,8 @@ msgid "PC5 ran out of memory planning the work."
 msgstr "Memori PC5 habis saat merencanakan pekerjaan."
 
 #: title/pc5_files.c:385 title/pc5_files.c:406 title/pc5_files.c:419
-#: title/pc5_library.c:2440 title/pc5_library.c:2529 title/pc5_library.c:2953
-#: title/pc5_library.c:2968 title/pc5_library.c:2974
+#: title/pc5_library.c:2444 title/pc5_library.c:2533 title/pc5_library.c:2957
+#: title/pc5_library.c:2972 title/pc5_library.c:2978
 #, c-format
 msgid "PC5 can't write %s: %s."
 msgstr "PC5 tidak bisa menulis %s: %s."
@@ -304,7 +304,7 @@ msgstr "PC5 tidak bisa menulis %s: %s."
 msgid "PC5 ran out of memory copying %s."
 msgstr "Memori PC5 habis saat menyalin %s."
 
-#: title/pc5_files.c:427 title/pc5_library.c:1854
+#: title/pc5_files.c:427 title/pc5_library.c:1858
 #, c-format
 msgid "PC5 can't put %s in place: %s."
 msgstr "PC5 tidak bisa menaruh %s di tempatnya: %s."
@@ -400,7 +400,7 @@ msgstr ""
 "Colokkan drive USB berisi %.100s: game ini dimainkan dari folder %.200s di "
 "dalamnya."
 
-#: title/pc5_library.c:175 title/pc5_library.c:2849 title/pc5_library.c:2900
+#: title/pc5_library.c:175 title/pc5_library.c:2853 title/pc5_library.c:2904
 #, c-format
 msgid "PC5 can't make the game's folder: %s."
 msgstr "PC5 tidak bisa membuat folder game: %s."
@@ -410,165 +410,165 @@ msgstr "PC5 tidak bisa membuat folder game: %s."
 msgid "PC5 can't link the game's folder on the USB drive: %s."
 msgstr "PC5 tidak bisa menautkan folder game di drive USB: %s."
 
-#: title/pc5_library.c:589 title/pc5_library.c:606
+#: title/pc5_library.c:593 title/pc5_library.c:610
 msgid "Choose one of the game's programs."
 msgstr "Pilih salah satu program game."
 
-#: title/pc5_library.c:602 title/pc5_library.c:752 title/pc5_library.c:976
+#: title/pc5_library.c:606 title/pc5_library.c:756 title/pc5_library.c:980
 msgid "PC5's notes on this game are missing."
 msgstr "Catatan PC5 tentang game ini hilang."
 
-#: title/pc5_library.c:614
+#: title/pc5_library.c:618
 msgid "That program is too deep in the game's folder for Windows."
 msgstr "Program itu terlalu dalam di folder game untuk Windows."
 
-#: title/pc5_library.c:619 title/pc5_library.c:1871 title/pc5_library.c:2584
-#: title/pc5_library.c:2587 title/pc5_library.c:2596 title/pc5_library.c:2670
-#: title/pc5_library.c:2862
+#: title/pc5_library.c:623 title/pc5_library.c:1875 title/pc5_library.c:2588
+#: title/pc5_library.c:2591 title/pc5_library.c:2600 title/pc5_library.c:2674
+#: title/pc5_library.c:2866
 #, c-format
 msgid "PC5 can't write its notes: %s."
 msgstr "PC5 tidak bisa menulis catatannya: %s."
 
-#: title/pc5_library.c:640
+#: title/pc5_library.c:644
 msgid "PC5 is out of memory."
 msgstr "Memori PC5 habis."
 
-#: title/pc5_library.c:644
+#: title/pc5_library.c:648
 #, c-format
 msgid "%.200s doesn't start any of the game's programs."
 msgstr "%.200s tidak menjalankan satu pun program game."
 
-#: title/pc5_library.c:844
+#: title/pc5_library.c:848
 msgid "The game's launch options are too long: 511 characters at most."
 msgstr "Opsi peluncuran game terlalu panjang: maksimal 511 karakter."
 
-#: title/pc5_library.c:861
+#: title/pc5_library.c:865
 msgid "The game's path is too long for Windows."
 msgstr "Jalur game terlalu panjang untuk Windows."
 
-#: title/pc5_library.c:877 title/pc5_library.c:1055
+#: title/pc5_library.c:881 title/pc5_library.c:1059
 #, c-format
 msgid "PC5 can't write the game's profile: %s."
 msgstr "PC5 tidak bisa menulis profil game: %s."
 
-#: title/pc5_library.c:1001
+#: title/pc5_library.c:1005
 #, c-format
 msgid "The program its launcher started isn't one of the game's: %.200s"
 msgstr "Program yang dijalankan launcher-nya bukan milik game: %.200s"
 
-#: title/pc5_library.c:1015
+#: title/pc5_library.c:1019
 msgid "The arguments its launcher gave are too long."
 msgstr "Argumen dari launcher-nya terlalu panjang."
 
-#: title/pc5_library.c:1037
+#: title/pc5_library.c:1041
 #, c-format
 msgid "Its programs kept starting each other: %d hand-offs in a row."
 msgstr "Program-programnya terus saling menjalankan: %d kali berturut-turut."
 
-#: title/pc5_library.c:1051
+#: title/pc5_library.c:1055
 msgid "The program's path is too long for Windows."
 msgstr "Jalur program terlalu panjang untuk Windows."
 
-#: title/pc5_library.c:1110
+#: title/pc5_library.c:1114
 #, c-format
 msgid "Its profile has a mistake (%s)."
 msgstr "Profilnya ada kesalahan (%s)."
 
-#: title/pc5_library.c:1127
+#: title/pc5_library.c:1131
 msgid "Its Windows folder is missing."
 msgstr "Folder Windows-nya hilang."
 
-#: title/pc5_library.c:1267
+#: title/pc5_library.c:1271
 #, c-format
 msgid "PC5 can't delete %s: %s."
 msgstr "PC5 tidak bisa menghapus %s: %s."
 
-#: title/pc5_library.c:1366 title/pc5_library.c:1641 title/pc5_library.c:1696
+#: title/pc5_library.c:1370 title/pc5_library.c:1645 title/pc5_library.c:1700
 #, c-format
 msgid "PC5 can't move the game's folder: %s."
 msgstr "PC5 tidak bisa memindahkan folder game: %s."
 
-#: title/pc5_library.c:1375 title/pc5_library.c:1646
+#: title/pc5_library.c:1379 title/pc5_library.c:1650
 #, c-format
 msgid "PC5 can't delete the game's profile: %s."
 msgstr "PC5 tidak bisa menghapus profil game: %s."
 
-#: title/pc5_library.c:1389 title/pc5_library.c:1633 title/pc5_library.c:2735
-#: title/pc5_library.c:2743
+#: title/pc5_library.c:1393 title/pc5_library.c:1637 title/pc5_library.c:2739
+#: title/pc5_library.c:2747
 msgid "A path is too long."
 msgstr "Ada jalur yang terlalu panjang."
 
-#: title/pc5_library.c:1592
+#: title/pc5_library.c:1596
 msgid "PC5 can't read the game's folder."
 msgstr "PC5 tidak bisa membaca folder game."
 
-#: title/pc5_library.c:1600 title/pc5_library.c:1851 title/pc5_library.c:2930
+#: title/pc5_library.c:1604 title/pc5_library.c:1855 title/pc5_library.c:2934
 #, c-format
 msgid "A path in the game is too long: %s."
 msgstr "Ada jalur di game yang terlalu panjang: %s."
 
-#: title/pc5_library.c:1609
+#: title/pc5_library.c:1613
 #, c-format
 msgid "PC5 can't keep %s: %s."
 msgstr "PC5 tidak bisa menyimpan %s: %s."
 
-#: title/pc5_library.c:1665
+#: title/pc5_library.c:1669
 #, c-format
 msgid "PC5 can't put the saves in place: %s."
 msgstr "PC5 tidak bisa menaruh data simpanan di tempatnya: %s."
 
-#: title/pc5_library.c:1679
+#: title/pc5_library.c:1683
 msgid "This game's saves can't be kept apart from it."
 msgstr "Data simpanan game ini tidak bisa disimpan terpisah darinya."
 
-#: title/pc5_library.c:1685
+#: title/pc5_library.c:1689
 #, c-format
 msgid "PC5 can't make its saves folder: %s."
 msgstr "PC5 tidak bisa membuat folder data simpanannya: %s."
 
-#: title/pc5_library.c:1689
+#: title/pc5_library.c:1693
 msgid "PC5 is still keeping this game's saves from before: start PC5 again."
 msgstr "PC5 masih menyimpan data simpanan lama game ini: jalankan PC5 lagi."
 
-#: title/pc5_library.c:1722
+#: title/pc5_library.c:1726
 #, c-format
 msgid "PC5 can't move the saves: %s."
 msgstr "PC5 tidak bisa memindahkan data simpanan: %s."
 
-#: title/pc5_library.c:1809
+#: title/pc5_library.c:1813
 #, c-format
 msgid "A path in the update is too long: %s."
 msgstr "Ada jalur di pembaruan yang terlalu panjang: %s."
 
-#: title/pc5_library.c:1891
+#: title/pc5_library.c:1895
 #, c-format
 msgid "PC5 can't write the game's list of files: %s."
 msgstr "PC5 tidak bisa menulis daftar file game: %s."
 
-#: title/pc5_library.c:2209
+#: title/pc5_library.c:2213
 msgid ""
 "PC5's Windows template is missing from the app: copy the PC5 folder again."
 msgstr "Templat Windows PC5 tidak ada di aplikasi: salin lagi folder PC5."
 
-#: title/pc5_library.c:2233
+#: title/pc5_library.c:2237
 msgid "PC5's Windows template is damaged: copy the PC5 folder again."
 msgstr "Templat Windows PC5 rusak: salin lagi folder PC5."
 
-#: title/pc5_library.c:2315 title/pc5_library.c:2375
+#: title/pc5_library.c:2319 title/pc5_library.c:2379
 #, c-format
 msgid "PC5 can't make its folders in %s: %s."
 msgstr "PC5 tidak bisa membuat foldernya di %s: %s."
 
-#: title/pc5_library.c:2326
+#: title/pc5_library.c:2330
 #, c-format
 msgid "PC5 can't make its folder on the USB drive: %s."
 msgstr "PC5 tidak bisa membuat foldernya di drive USB: %s."
 
-#: title/pc5_library.c:2329
+#: title/pc5_library.c:2333
 msgid "PC5 can't name the game's folder on the USB drive."
 msgstr "PC5 tidak bisa memberi nama folder game di drive USB."
 
-#: title/pc5_library.c:2347
+#: title/pc5_library.c:2351
 #, c-format
 msgid ""
 "The drive reads at %.0f MB/s here, too slow to play from (%.0f needed). "
@@ -579,7 +579,7 @@ msgstr ""
 "darinya (perlu %.0f). Colokkan ke port di belakang atau port USB-C di "
 "depan. Instal ke konsol tetap bisa."
 
-#: title/pc5_library.c:2355
+#: title/pc5_library.c:2359
 #, c-format
 msgid ""
 "Not enough space on the USB drive: the game needs %s and it has %s free."
@@ -587,18 +587,18 @@ msgstr ""
 "Ruang di drive USB tidak cukup: game perlu %s, sedangkan drive hanya punya "
 "%s ruang kosong."
 
-#: title/pc5_library.c:2359
+#: title/pc5_library.c:2363
 msgid ""
 "Only a game on a USB drive can play from it: this folder isn't on one."
 msgstr ""
 "Hanya game di drive USB yang bisa dimainkan langsung dari drive itu: "
 "folder ini tidak ada di drive USB."
 
-#: title/pc5_library.c:2361
+#: title/pc5_library.c:2365
 msgid "A game in PC5's INSTALL folder is installed, not played from there."
 msgstr "Game di folder INSTALL PC5 diinstal, bukan dimainkan dari sana."
 
-#: title/pc5_library.c:2366
+#: title/pc5_library.c:2370
 #, c-format
 msgid ""
 "The drive reads at %.0f MB/s in this USB port, too slow to play from (at "
@@ -611,87 +611,87 @@ msgstr ""
 "depan adalah yang lambat: colokkan drive ke port di belakang, atau port "
 "USB-C depan. Instal tetap bisa dari port ini."
 
-#: title/pc5_library.c:2372
+#: title/pc5_library.c:2376
 msgid "The game's program is too deep in its folder for Windows."
 msgstr "Program game terlalu dalam di foldernya untuk Windows."
 
-#: title/pc5_library.c:2380
+#: title/pc5_library.c:2384
 #, c-format
 msgid "Not enough space: the game needs %s and the console has %s free."
 msgstr ""
 "Ruang tidak cukup: game perlu %s, sedangkan konsol hanya punya %s ruang "
 "kosong."
 
-#: title/pc5_library.c:2383
+#: title/pc5_library.c:2387
 msgid "PC5 can't name the game."
 msgstr "PC5 tidak bisa memberi nama game."
 
-#: title/pc5_library.c:2386
+#: title/pc5_library.c:2390
 #, c-format
 msgid "PC5 can't start the install: %s."
 msgstr "PC5 tidak bisa memulai instalasi: %s."
 
-#: title/pc5_library.c:2393 title/pc5_library.c:2466 title/pc5_library.c:2502
-#: title/pc5_library.c:2751
+#: title/pc5_library.c:2397 title/pc5_library.c:2470 title/pc5_library.c:2506
+#: title/pc5_library.c:2755
 msgid "Out of memory."
 msgstr "Memori habis."
 
-#: title/pc5_library.c:2426
+#: title/pc5_library.c:2430
 msgid "A path in the Windows template is too long."
 msgstr "Ada jalur di templat Windows yang terlalu panjang."
 
-#: title/pc5_library.c:2429 title/pc5_library.c:2434 title/pc5_library.c:2937
+#: title/pc5_library.c:2433 title/pc5_library.c:2438 title/pc5_library.c:2941
 #: title/pc5_tile.c:519
 #, c-format
 msgid "PC5 can't make %s: %s."
 msgstr "PC5 tidak bisa membuat %s: %s."
 
-#: title/pc5_library.c:2437
+#: title/pc5_library.c:2441
 #, c-format
 msgid "PC5's Windows template is missing %s."
 msgstr "Templat Windows PC5 tidak memiliki %s."
 
-#: title/pc5_library.c:2455
+#: title/pc5_library.c:2459
 #, c-format
 msgid "PC5 can't copy %s: %s."
 msgstr "PC5 tidak bisa menyalin %s: %s."
 
-#: title/pc5_library.c:2480
+#: title/pc5_library.c:2484
 #, c-format
 msgid "PC5 can't read %s on the USB drive: %s."
 msgstr "PC5 tidak bisa membaca %s di drive USB: %s."
 
-#: title/pc5_library.c:2521 title/pc5_library.c:2947
+#: title/pc5_library.c:2525 title/pc5_library.c:2951
 #, c-format
 msgid "PC5 can't read back %s: %s."
 msgstr "PC5 tidak bisa membaca ulang %s: %s."
 
-#: title/pc5_library.c:2521
+#: title/pc5_library.c:2525
 #, c-format
 msgid "The USB drive stopped answering while PC5 copied %s (%s)."
 msgstr "Drive USB berhenti merespons saat PC5 menyalin %s (%s)."
 
-#: title/pc5_library.c:2549 title/pc5_library.c:2561
+#: title/pc5_library.c:2553 title/pc5_library.c:2565
 #, c-format
 msgid ""
 "The game couldn't be put back in the INSTALL folder: it is in %.180s."
 msgstr "Game tidak bisa dikembalikan ke folder INSTALL: game ada di %.180s."
 
-#: title/pc5_library.c:2600
+#: title/pc5_library.c:2604
 #, c-format
 msgid "PC5 can't save the cover: %s."
 msgstr "PC5 tidak bisa menyimpan sampul: %s."
 
-#: title/pc5_library.c:2607
+#: title/pc5_library.c:2611
 #, c-format
 msgid "PC5 can't put the game in place: %s."
 msgstr "PC5 tidak bisa menaruh game di tempatnya: %s."
 
-#: title/pc5_library.c:2716
+#: title/pc5_library.c:2720
 msgid "PC5 didn't install this game, so it can't update it."
 msgstr "PC5 tidak menginstal game ini, jadi tidak bisa memperbaruinya."
 
-#: title/pc5_library.c:2718
+#: title/pc5_library.c:2722
 #, c-format
 msgid ""
 "%s plays from its USB drive: copy the newer version over its folder %s "
@@ -700,11 +700,11 @@ msgstr ""
 "%s dimainkan dari drive USB-nya: salin versi yang lebih baru untuk menimpa "
 "foldernya %s di sana."
 
-#: title/pc5_library.c:2723
+#: title/pc5_library.c:2727
 msgid "The game's folder is missing: uninstall it and install it again."
 msgstr "Folder game hilang: hapus instalannya lalu instal lagi."
 
-#: title/pc5_library.c:2726
+#: title/pc5_library.c:2730
 #, c-format
 msgid ""
 "This folder doesn't have %s, the program %s starts. Choose the folder of a "
@@ -713,14 +713,14 @@ msgstr ""
 "Folder ini tidak punya %s, program yang dijalankan %s. Pilih folder "
 "salinan %s yang lebih baru."
 
-#: title/pc5_library.c:2740
+#: title/pc5_library.c:2744
 #, c-format
 msgid "Not enough space: the update needs %s and the console has %s free."
 msgstr ""
 "Ruang tidak cukup: pembaruan perlu %s, sedangkan konsol hanya punya %s "
 "ruang kosong."
 
-#: title/pc5_library.c:2746
+#: title/pc5_library.c:2750
 msgid ""
 "An earlier update of this game isn't finished: close PC5 and open it again "
 "to finish it."
@@ -728,41 +728,41 @@ msgstr ""
 "Pembaruan sebelumnya untuk game ini belum selesai: tutup PC5 lalu buka "
 "lagi untuk menyelesaikannya."
 
-#: title/pc5_library.c:2748
+#: title/pc5_library.c:2752
 #, c-format
 msgid "PC5 can't start the update: %s."
 msgstr "PC5 tidak bisa memulai pembaruan: %s."
 
-#: title/pc5_library.c:2777
+#: title/pc5_library.c:2781
 msgid ""
 "Kept saves can't be put back for a game that plays from its USB drive."
 msgstr ""
 "Data simpanan yang dipertahankan tidak bisa dikembalikan untuk game yang "
 "dimainkan dari drive USB-nya."
 
-#: title/pc5_library.c:2781
+#: title/pc5_library.c:2785
 msgid "The install has begun already."
 msgstr "Instalasi sudah dimulai."
 
-#: title/pc5_library.c:2797
+#: title/pc5_library.c:2801
 msgid "PC5 can't read the kept saves."
 msgstr "PC5 tidak bisa membaca data simpanan yang dipertahankan."
 
-#: title/pc5_library.c:2797
+#: title/pc5_library.c:2801
 msgid "The kept saves are damaged: they have no registry."
 msgstr "Data simpanan yang dipertahankan rusak: tidak ada registry."
 
-#: title/pc5_library.c:2874
+#: title/pc5_library.c:2878
 #, c-format
 msgid "PC5 can't make the game's folder on the USB drive: %s."
 msgstr "PC5 tidak bisa membuat folder game di drive USB: %s."
 
-#: title/pc5_library.c:2947
+#: title/pc5_library.c:2951
 #, c-format
 msgid "PC5 can't open %s on the USB drive: %s."
 msgstr "PC5 tidak bisa membuka %s di drive USB: %s."
 
-#: title/pc5_library.c:2985
+#: title/pc5_library.c:2989
 #, c-format
 msgid ""
 "The copy of %s doesn't match the USB drive. The drive or its cable may be "
