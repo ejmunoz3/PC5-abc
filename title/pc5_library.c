@@ -314,9 +314,13 @@ int pc5_profile_text_at(const char *id, const Pc5Info *info, const char *argumen
      * quietly instead of getting further and crashing. AMD's GPU services library, which an
      * AMD-sponsored game ships (amd_ags_x64.dll) to ask the Radeon driver its version, is
      * always Wine's (patch 0978, Proton's): the game's own finds no driver, and Marvel's
-     * Spider-Man Remastered then says the graphics driver is too old. */
-    const char *overrides = info->api == PC5_API_D3D12 ? "d3d8,d3d9,d3d10core,d3d11,d3d12,d3d12core,dxgi=n;amd_ags_x64=b"
-                                                       : "d3d8,d3d9,d3d10core,d3d11,dxgi=n;d3d12,d3d12core,amd_ags_x64=b";
+     * Spider-Man Remastered then says the graphics driver is too old. Intel's upscaling
+     * libraries (libxess.dll, libxess_fg.dll, libxell.dll), which a game may ship for
+     * Intel XeSS, are disabled: they need an Intel GPU the console hasn't, and on the
+     * PS5's AMD their initialisation crashes or returns values the game takes for valid
+     * (EA Sports College Football 27). */
+    const char *overrides = info->api == PC5_API_D3D12 ? "d3d8,d3d9,d3d10core,d3d11,d3d12,d3d12core,dxgi=n;amd_ags_x64=b;libxess,libxess_fg,libxell=d"
+                                                       : "d3d8,d3d9,d3d10core,d3d11,dxgi=n;d3d12,d3d12core,amd_ags_x64=b;libxess,libxess_fg,libxell=d";
     /* Graphics API (pc5_controls.h): Wine's own Direct3D, all of it Wine's (its dxgi with
      * its d3d11 or d3d12), on OpenGL through Zink or, WineD3D on Vulkan, drawing with
      * Vulkan itself (WINE_D3D_CONFIG, which prospero-win's [debug] env passes on). A
@@ -330,7 +334,7 @@ int pc5_profile_text_at(const char *id, const Pc5Info *info, const char *argumen
         if (!offered) chosen = PC5_GRAPHICS_AUTO;
     }
     if (chosen != PC5_GRAPHICS_AUTO && info->api != PC5_API_DDRAW) {
-        overrides = "d3d8,d3d9,d3d10core,d3d11,dxgi,d3d12,d3d12core,amd_ags_x64=b";
+        overrides = "d3d8,d3d9,d3d10core,d3d11,dxgi,d3d12,d3d12core,amd_ags_x64=b;libxess,libxess_fg,libxell=d";
         graphics = chosen == PC5_GRAPHICS_WINE && info->api != PC5_API_D3D12 ? "opengl" : "dxvk";
     }
     /* Without OpenGL (graphics = dxvk), Wine's own Direct3D draws with Vulkan too: a DirectDraw
