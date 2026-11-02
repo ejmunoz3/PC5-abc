@@ -1291,7 +1291,7 @@ static void test_install(void)
         CHECK(profile->app.architecture == PW_APP_ARCH_PE64 && profile->app.graphics == PW_APP_GRAPHICS_DXVK, "pe64 dxvk");
         CHECK(!strcmp(profile->app.prefix, "neondrift"), "own prefix");
         /* A Direct3D 11 game: DXVK as prospero-win's profiles have it, Wine's own d3d12. */
-        CHECK(!strcmp(profile->app.dll_overrides, "d3d8,d3d9,d3d10core,d3d11,dxgi=n;d3d12,d3d12core,amd_ags_x64=b"), "overrides: %s",
+        CHECK(!strcmp(profile->app.dll_overrides, "d3d8,d3d9,d3d10core,d3d11,dxgi=n;d3d12,d3d12core,amd_ags_x64=b;libxess,libxess_fg,libxell=d"), "overrides: %s",
               profile->app.dll_overrides);
         CHECK(!profile->display.show_fps, "no fps counter");
     }
@@ -1308,7 +1308,7 @@ static void test_install(void)
         static char text[4096];
         twelve.api = PC5_API_D3D12;
         CHECK(!pc5_profile_text_at("twelve", &twelve, "", NULL, NULL, NULL, text, sizeof(text)) &&
-              strstr(text, "dll_overrides = d3d8,d3d9,d3d10core,d3d11,d3d12,d3d12core,dxgi=n;amd_ags_x64=b\n"), "d3d12 overrides");
+              strstr(text, "dll_overrides = d3d8,d3d9,d3d10core,d3d11,d3d12,d3d12core,dxgi=n;amd_ags_x64=b;libxess,libxess_fg,libxell=d\n"), "d3d12 overrides");
     }
     /* Changed launch options take effect at the next start. */
     path(file, sizeof(file), "%s/neondrift/drive_c/Games/NeonDrift/launch.txt", prefixes);
@@ -1342,7 +1342,7 @@ static void test_install(void)
         pw_wine_library_load(pw, root);
         profile = pw_wine_library_find(pw, "neondrift");
         CHECK(profile && !strcmp(profile->app.dll_overrides,
-                                 "d3d8,d3d9,d3d10core,d3d11,dxgi=n;d3d12,d3d12core,amd_ags_x64=b;d3dcompiler_47,msvcp140=n,b"),
+                                 "d3d8,d3d9,d3d10core,d3d11,dxgi=n;d3d12,d3d12core,amd_ags_x64=b;libxess,libxess_fg,libxell=d;d3dcompiler_47,msvcp140=n,b"),
               "overrides with its own DLLs: %s", profile ? profile->app.dll_overrides : "");
         CHECK(profile && profile->display.width == 3840 && profile->display.height == 2160, "4K desktop");
         controls.resolution = 1;
