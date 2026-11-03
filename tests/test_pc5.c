@@ -1651,14 +1651,34 @@ static void test_install(void)
         }
         /* 6 GB: kept, and Wine's own Direct3D is told nothing (it's DXVK's dxgi's). */
         k.video_memory_full = 0;
-        k.video_memory_gb = 6;
+        k.video_memory_mb = 6144;
         pc5_controls_save(root, "starfall", &k);
         {
             Pc5Controls back;
             pc5_controls_load(root, "starfall", &back);
-            CHECK(back.video_memory_gb == 6 && !back.video_memory_full, "6 GB kept in its controls");
+            CHECK(back.video_memory_mb == 6144 && !back.video_memory_full, "6 GB kept in its controls");
         }
-        k.video_memory_gb = 0;
+        /* A smaller size chosen: told that (a 32-bit game, 1 GB). */
+        k.video_memory_mb = 1024;
+        pc5_controls_save(root, "starfall", &k);
+        CHECK(!pc5_profile_refresh(root, "starfall", why, sizeof(why)), "refreshed: %s", why);
+        pw_wine_library_load(pw, root);
+        profile = pw_wine_library_find(pw, "starfall");
+        CHECK(profile && profile->debug_env_count && strstr(profile->debug_env[0].value, "VideoMemorySize=1024"),
+              "1 GB told: %s", profile && profile->debug_env_count ? profile->debug_env[0].value : "-");
+        {
+            Pc5Controls back;
+            pc5_controls_load(root, "starfall", &back);
+            CHECK(back.video_memory_mb == 1024 && !strcmp(pc5_video_memory_key(&back), "1gb"), "1 GB kept in its controls");
+            CHECK(pc5_video_memory_level(&back, 1) == 1, "the second of a 32-bit game's sizes");
+            pc5_video_memory_set(&back, 1, 3);
+            CHECK(back.video_memory_mb == 3072 && !back.video_memory_full, "then 3 GB");
+            pc5_video_memory_set(&back, 1, 4);
+            CHECK(back.video_memory_full && !back.video_memory_mb, "then Maximum");
+            pc5_video_memory_set(&back, 0, 0);
+            CHECK(back.video_memory_mb == 2048 && !back.video_memory_full, "a 64-bit game's least: 2 GB");
+        }
+        k.video_memory_mb = 0;
         k.video_memory_full = 0;
         pc5_controls_save(root, "starfall", &k);
         CHECK(!pc5_profile_refresh(root, "starfall", why, sizeof(why)), "refreshed: %s", why);
@@ -2532,6 +2552,10 @@ static void test_controls(void)
     CHECK(!pc5_controls_input(&k, text, sizeof(text)) && !strcmp(text, "[input]\nmode = xinput\n"), "xbox: %s", text);
     k.mode = PC5_PAD_DUALSENSE;
     CHECK(!pc5_controls_input(&k, text, sizeof(text)) && !strcmp(text, "[input]\nmode = dualsense\n"), "dualsense: %s", text);
+    k.mode = PC5_PAD_WHEEL;
+    CHECK(!pc5_controls_input(&k, text, sizeof(text)) && !strcmp(text, "[input]\nmode = wheel\n"), "wheel: %s", text);
+    CHECK(!pc5_controls_save(dir, "wheel", &k) && !pc5_controls_load(dir, "wheel", &back) && back.mode == PC5_PAD_WHEEL,
+          "the wheel kept and read back");
     k.mode = PC5_PAD_KEYBOARD;
     CHECK(!pc5_controls_input(&k, text, sizeof(text)) && strstr(text, "mode = keyboard\nmouse = right_stick\nmouse_speed = 1200\n") &&
               strstr(text, "cross = space\n") && strstr(text, "left_stick_up = w\n") && !strstr(text, "right_stick_up"),
@@ -4761,6 +4785,33 @@ static void test_dotnet(void)
         pc5_buf_free(&text);
     }
     CHECK(pc5_prefix_fonts(root, "missing", app) == -1, "no prefix: nothing done");
+    /* Arial's files: Liberation Sans in C:\Windows\Fonts under Arial's names, once; the
+     * player's own Arial stays. */
+    {
+        char font[PC5_PATH];
+        CHECK(pc5_prefix_arial(root, "game", app) == 0, "no Windows yet: nothing done");
+        path(file, sizeof(file), "%s/prefixes/game/drive_c/windows", root);
+        pc5_mkdirs(file);
+        CHECK(pc5_prefix_arial(root, "game", app) == 0, "an app without Liberation: nothing done");
+        path(file, sizeof(file), "%s/win/wine/share/wine/fonts", app);
+        pc5_mkdirs(file);
+        static const char *const liberation[] = { "Regular", "Bold", "Italic", "BoldItalic" };
+        for (int i = 0; i < 4; i++) {
+            path(font, sizeof(font), "%s/win/wine/share/wine/fonts/LiberationSans-%s.ttf", app, liberation[i]);
+            write_text(font, liberation[i]);
+        }
+        path(font, sizeof(font), "%s/prefixes/game/drive_c/windows/Fonts", root);
+        pc5_mkdirs(font);
+        path(font, sizeof(font), "%s/prefixes/game/drive_c/windows/Fonts/arialbd.ttf", root);
+        write_text(font, "the player's own");
+        CHECK(pc5_prefix_arial(root, "game", app) == 3, "three added beside the player's own");
+        CHECK(pc5_prefix_arial(root, "game", app) == 0, "only once");
+        CHECK(file_is(font, "the player's own"), "the player's own Arial Bold stays");
+        path(font, sizeof(font), "%s/prefixes/game/drive_c/windows/Fonts/arial.ttf", root);
+        CHECK(file_is(font, "Regular"), "arial.ttf is Liberation Sans");
+        path(font, sizeof(font), "%s/prefixes/game/drive_c/windows/Fonts/arialbi.ttf", root);
+        CHECK(file_is(font, "BoldItalic"), "arialbi.ttf is Liberation Sans Bold Italic");
+    }
 
     /* Windows versions: Splinter Cell: Conviction's program told it runs on Windows 7, once. */
     CHECK(pc5_prefix_versions(root, "game") == 1, "an older game's prefix gets the Windows versions");
@@ -6265,7 +6316,7 @@ static int controls_has(const char *id, const char *line)
     return found;
 }
 
-/* A game's controller from its menu: the three modes, Button mapping and the key picker. The
+/* A game's controller from its menu: the four modes, Button mapping and the key picker. The
  * library shows the engine game (orbital-nine). */
 static void test_controller_screens(Pc5Ui *ui, Pc5Canvas *canvas)
 {
@@ -6275,11 +6326,11 @@ static void test_controller_screens(Pc5Ui *ui, Pc5Canvas *canvas)
     press(ui, PC5_KEY_RIGHT, canvas);
     CHECK(controls_has("orbital-nine", "mode = dualsense\n"), "Controller: DualSense");
     press(ui, PC5_KEY_ACCEPT, canvas);
+    CHECK(controls_has("orbital-nine", "mode = wheel\n"), "then the G29 wheel");
+    press(ui, PC5_KEY_ACCEPT, canvas);
     CHECK(controls_has("orbital-nine", "mode = keyboard\n"), "then Keyboard & mouse");
-    press(ui, PC5_KEY_LEFT, canvas);
-    press(ui, PC5_KEY_LEFT, canvas);
-    press(ui, PC5_KEY_LEFT, canvas);
-    CHECK(controls_has("orbital-nine", "mode = keyboard\n"), "round the three, both ways");
+    for (int i = 0; i < 4; i++) press(ui, PC5_KEY_LEFT, canvas);
+    CHECK(controls_has("orbital-nine", "mode = keyboard\n"), "round the four, both ways");
     /* Button mapping, which only Keyboard & mouse has. */
     press(ui, PC5_KEY_DOWN, canvas);
     press(ui, PC5_KEY_ACCEPT, canvas);
@@ -7061,7 +7112,7 @@ static void test_screens(const char *fonts)
     CHECK(controls_has("orbital-nine", "aspect_ratio = stretch\n"), "Aspect ratio: Stretch");
     press(ui, PC5_KEY_LEFT, &canvas);
     CHECK(controls_has("orbital-nine", "aspect_ratio = keep\n"), "then Keep");
-    press(ui, PC5_KEY_DOWN, &canvas);       /* Video memory (a 64-bit Direct3D game: no Memory): 5 GB, 6 GB, Full, Auto */
+    press(ui, PC5_KEY_DOWN, &canvas);       /* Video memory (a 64-bit Direct3D game: no Memory): 5 GB, 6 GB, Full, 2 GB, 3 GB, Auto */
     press(ui, PC5_KEY_ACCEPT, &canvas);
     CHECK(controls_has("orbital-nine", "video_memory = 5gb\n"), "Video memory: 5 GB");
     press(ui, PC5_KEY_RIGHT, &canvas);
@@ -7069,9 +7120,14 @@ static void test_screens(const char *fonts)
     press(ui, PC5_KEY_RIGHT, &canvas);
     CHECK(controls_has("orbital-nine", "video_memory = full\n"), "then Full");
     press(ui, PC5_KEY_RIGHT, &canvas);
+    CHECK(controls_has("orbital-nine", "video_memory = 2gb\n"), "round to the least, 2 GB");
+    press(ui, PC5_KEY_RIGHT, &canvas);
+    CHECK(controls_has("orbital-nine", "video_memory = 3gb\n"), "then 3 GB");
+    press(ui, PC5_KEY_RIGHT, &canvas);
     CHECK(controls_has("orbital-nine", "video_memory = auto\n"), "then Auto");
     press(ui, PC5_KEY_LEFT, &canvas);
-    CHECK(controls_has("orbital-nine", "video_memory = full\n"), "back to Full");
+    CHECK(controls_has("orbital-nine", "video_memory = 3gb\n"), "back to 3 GB");
+    save_shot(&canvas, "game-menu-graphics-memory");
     press(ui, PC5_KEY_RIGHT, &canvas);
     CHECK(controls_has("orbital-nine", "video_memory = auto\n"), "and Auto again");
     press(ui, PC5_KEY_DOWN, &canvas);       /* CPU sharing: on, then off again */

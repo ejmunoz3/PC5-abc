@@ -335,6 +335,39 @@ int pc5_prefix_fonts(const char *root, const char *prefix, const char *app)
     return append_file(from, user) ? -1 : 1;
 }
 
+/* Arial's files, as games open them in C:\Windows\Fonts by name, and Liberation Sans's, which has
+ * Arial's metrics: (Arial's file, Liberation's) pairs. */
+static const char *const arial_files[][2] = {
+    { "arial.ttf", "LiberationSans-Regular.ttf" }, { "arialbd.ttf", "LiberationSans-Bold.ttf" },
+    { "ariali.ttf", "LiberationSans-Italic.ttf" }, { "arialbi.ttf", "LiberationSans-BoldItalic.ttf" },
+};
+
+int pc5_prefix_arial(const char *root, const char *prefix, const char *app)
+{
+    char windows[PC5_PATH], fonts[PC5_PATH], to[PC5_PATH], from[PC5_PATH];
+    int added = 0;
+
+    if (!app || !app[0]) return 0;
+    if (!prefix || !prefix[0] || !strcmp(prefix, "default")
+            ? pc5_format(windows, sizeof(windows), "%s/prefix/drive_c/windows", root)
+            : pc5_format(windows, sizeof(windows), "%s/prefixes/%s/drive_c/windows", root, prefix))
+        return -1;
+    if (!pc5_exists(windows)) return 0;   /* no Windows yet: the next start adds them */
+    if (pc5_format(fonts, sizeof(fonts), "%s/Fonts", windows) || pc5_mkdirs(fonts)) return -1;
+    for (size_t i = 0; i < sizeof(arial_files) / sizeof(arial_files[0]); i++) {
+        Pc5Buf data = { 0 };
+        if (pc5_format(to, sizeof(to), "%s/%s", fonts, arial_files[i][0]) ||
+            pc5_format(from, sizeof(from), "%s/win/wine/share/wine/fonts/%s", app, arial_files[i][1]))
+            return -1;
+        if (pc5_exists(to) || !pc5_is_file(from)) continue;   /* the player's own Arial stays */
+        int failed = pc5_read_file(from, &data, 4u << 20) || pc5_write_file(to, data.data, data.len);
+        pc5_buf_free(&data);
+        if (failed) return -1;
+        added++;
+    }
+    return added;
+}
+
 /* Programs whose own check refuses Windows 10, by name, and the Windows they were made for. */
 static const struct { const char *program, *version; } program_versions[] = {
     { "Conviction_game.exe", "win7" },   /* Splinter Cell: Conviction's system check: "Operating System not supported" */
@@ -697,6 +730,8 @@ void pc5_game_begin(Pc5GameSession *game, const Pc5GameOps *ops, const char *roo
         if (dotnet) say(game, "PC5 prefix .NET %s", dotnet > 0 ? "updated" : "update failed");
         int fonts = pc5_prefix_fonts(root, prefix, app);
         if (fonts) say(game, "PC5 prefix fonts %s", fonts > 0 ? "named" : "naming failed");
+        int arial = pc5_prefix_arial(root, prefix, app);
+        if (arial) say(game, "PC5 prefix Arial files %s %d", arial > 0 ? "added" : "failed", arial > 0 ? arial : 0);
         int versions = pc5_prefix_versions(root, prefix);
         if (versions) say(game, "PC5 prefix Windows versions %s", versions > 0 ? "added" : "failed");
         char started[PC5_PATH];
@@ -712,7 +747,7 @@ void pc5_game_begin(Pc5GameSession *game, const Pc5GameOps *ops, const char *roo
      * whose large-address flag asks for it, as on Windows), and CPU sharing, which Wine's server
      * reads (patch 0882, WINE_PS5_SCHED=1; the profile says it too, but PC5 writes
      * only the profiles of the games it installed). */
-    int memory_4gb = 0, stretch = 0, cpu_sharing = 0, video_memory_full = 0, video_memory_gb = 0, pointer_hide = 0;
+    int memory_4gb = 0, stretch = 0, cpu_sharing = 0, video_memory_full = 0, video_memory_mb = 0, pointer_hide = 0;
     int surround = 0;
     if (prefix && prefix[0]) {
         Pc5Controls controls;
@@ -722,7 +757,7 @@ void pc5_game_begin(Pc5GameSession *game, const Pc5GameOps *ops, const char *roo
         stretch = controls.stretch;
         cpu_sharing = controls.cpu_sharing;
         video_memory_full = controls.video_memory_full;
-        video_memory_gb = controls.video_memory_gb == 5 || controls.video_memory_gb == 6 ? controls.video_memory_gb : 0;
+        video_memory_mb = controls.video_memory_mb >= 512 && controls.video_memory_mb <= 6144 ? controls.video_memory_mb : 0;
         pointer_hide = controls.pointer_hide;
         surround = controls.surround;
         /* A two-finger click mapped to a key (Keyboard & mouse): the game's, not PC5's keyboard. */
@@ -744,7 +779,8 @@ void pc5_game_begin(Pc5GameSession *game, const Pc5GameOps *ops, const char *roo
     /* Video memory: the console's 12 GB are shared between the game and its graphics, but
      * DXGI said 8 GB were the graphics' own, and a Direct3D 11 or 12 game that sized its
      * textures to that ran the console out of memory. Auto tells it 4 GB (DXVK's dxgi, with
-     * patches/dxvk 0005 for the budget), 5 GB or 6 GB 5120 or 6144 MB; Full the whole heap.
+     * patches/dxvk 0005 for the budget), a size chosen that size (2 GB to 6 GB; 512 MB to 3 GB
+     * for a 32-bit game); Full the whole heap.
      * A game's env.txt, applied after, can set DXVK_CONFIG itself. */
     {
         /* With the DXVK options of a game PC5 knows (pc5_known_dxvk: GTA IV's). */
@@ -754,7 +790,7 @@ void pc5_game_begin(Pc5GameSession *game, const Pc5GameOps *ops, const char *roo
                                 : NULL;
         if (!video_memory_full)
             snprintf(dxvk_config, sizeof(dxvk_config), "dxgi.maxDeviceMemory = %d",
-                     video_memory_gb ? video_memory_gb * 1024 : 4096);
+                     video_memory_mb ? video_memory_mb : 4096);
         if (known) {
             size_t n = strlen(dxvk_config);
             snprintf(dxvk_config + n, sizeof(dxvk_config) - n, "%s%s", n ? "; " : "", known);
