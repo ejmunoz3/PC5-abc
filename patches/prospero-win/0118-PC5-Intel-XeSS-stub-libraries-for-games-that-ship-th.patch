@@ -21,8 +21,8 @@ replace the game's.
  PUBLICATION_ALLOWLIST.txt                     |   1 +
  THIRD_PARTY.md                                |   3 +
  docs/WINE_PS5_BUILD.md                        |   1 +
- ...stub-intel-xess-for-games-that-ship-them.patch | 615 +++++++++++++++++++++
- 4 files changed, 620 insertions(+)
+ ...stub-intel-xess-for-games-that-ship-them.patch | 613 +++++++++++++++++++++
+ 4 files changed, 618 insertions(+)
  create mode 100644 wine/patches/0950-stub-intel-xess-for-games-that-ship-them.patch
 
 diff --git a/PUBLICATION_ALLOWLIST.txt b/PUBLICATION_ALLOWLIST.txt
@@ -58,7 +58,7 @@ new file mode 100644
 index 0000000..a1b2c3d
 --- /dev/null
 +++ b/wine/patches/0950-stub-intel-xess-for-games-that-ship-them.patch
-@@ -0,0 +1,615 @@
+@@ -0,0 +1,613 @@
 +From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 +From: bornaradusin <bornaradusin@users.noreply.github.com>
 +Date: Mon, 2 Nov 2026 23:30:00 +0000
@@ -84,7 +84,6 @@ index 0000000..a1b2c3d
 +version return 0, and destroy/cleanup functions succeed silently.
 +---
 +diff --git a/configure b/configure
-+index 50b8006..1a2b3c4 100755
 +--- a/configure
 ++++ b/configure
 +@@ -1243,6 +1243,9 @@ enable_kernelbase
@@ -108,7 +107,6 @@ index 0000000..a1b2c3d
 + wine_fn_config_makefile dlls/loadperf/tests enable_tests
 + wine_fn_config_makefile dlls/localspl enable_localspl
 +diff --git a/configure.ac b/configure.ac
-+index eae581f..b3c4d5e 100644
 +--- a/configure.ac
 ++++ b/configure.ac
 +@@ -2858,6 +2858,9 @@ WINE_CONFIG_MAKEFILE(dlls/ksecdd)
