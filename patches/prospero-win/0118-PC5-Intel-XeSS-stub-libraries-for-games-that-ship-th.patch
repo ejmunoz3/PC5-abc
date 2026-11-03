@@ -2,7 +2,7 @@ From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: bornaradusin <bornaradusin@users.noreply.github.com>
 Date: Mon, 2 Nov 2026 23:30:00 +0000
 Subject: [PATCH] PC5: Intel XeSS stub libraries for games that ship them (Wine
- patch 0990)
+ patch 1000)
 
 EA Sports College Football 27 ships Intel's XeSS libraries (libxess.dll,
 libxess_fg.dll, libxell.dll) and imports them statically: the PE loader
@@ -11,7 +11,7 @@ initialise against no Intel driver and crash or return values the game
 takes for valid.  Disabling them (=d) doesn't work because the loader
 won't start the program without them (STATUS_DLL_NOT_FOUND, c0000135).
 
-Wine patch 0990 adds stub builtins that export every public XeSS SDK
+Wine patch 1000 adds stub builtins that export every public XeSS SDK
 function but return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE (-1) from any
 call that creates a context or initialises.  The game sees "no XeSS
 hardware" and falls back to its other upscaler (FSR, native).  The title
@@ -23,14 +23,14 @@ replace the game's.
  docs/WINE_PS5_BUILD.md                        |   1 +
  ...stub-intel-xess-for-games-that-ship-them.patch | 615 +++++++++++++++++++++
  4 files changed, 620 insertions(+)
- create mode 100644 wine/patches/0990-stub-intel-xess-for-games-that-ship-them.patch
+ create mode 100644 wine/patches/1000-stub-intel-xess-for-games-that-ship-them.patch
 
 diff --git a/PUBLICATION_ALLOWLIST.txt b/PUBLICATION_ALLOWLIST.txt
 --- a/PUBLICATION_ALLOWLIST.txt
 +++ b/PUBLICATION_ALLOWLIST.txt
 @@ -689,3 +689,4 @@ wine/patches/0980-win32u-ps5-the-hardware-cursor-follows-the-pointer-between-pre
  wine/patches/0983-ntdll-ps5-name-the-occupant-of-a-refused-reservation.patch
-+wine/patches/0990-stub-intel-xess-for-games-that-ship-them.patch
++wine/patches/1000-stub-intel-xess-for-games-that-ship-them.patch
  tests/test_wine_mouse_wheel.py
 
 diff --git a/THIRD_PARTY.md b/THIRD_PARTY.md
@@ -41,7 +41,7 @@ diff --git a/THIRD_PARTY.md b/THIRD_PARTY.md
  `dlls/amd_ags_x64`, LGPL-2.1-or-later), brought in by Wine patch 0978; its
  `amd_ags.h` is AMD's AGS SDK header, under the MIT licence.
 +`libxess.dll`, `libxess_fg.dll` and `libxell.dll` are stub libraries for
-+Intel's XeSS SDK (LGPL-2.1-or-later), brought in by Wine patch 0990, so
++Intel's XeSS SDK (LGPL-2.1-or-later), brought in by Wine patch 1000, so
 +games that ship Intel XeSS load without needing an Intel GPU.
  
  Wine includes code from other projects (zlib, libpng, FAudio, the LLVM C++
@@ -51,13 +51,13 @@ diff --git a/docs/WINE_PS5_BUILD.md b/docs/WINE_PS5_BUILD.md
 +++ b/docs/WINE_PS5_BUILD.md
 @@ -195,2 +195,3 @@ before evaluating a candidate built from that cache.
  | 0980 | `win32u`: on PS5, each move, new image or hiding of the cursor also goes to `libvulkan.prx`'s `pw_videoout_cursor_follow`, so VideoOut's hardware cursor follows the pointer between presents, unless a desktop frame (the cursor drawn in) is what shows. A game that draws only when something changes (Age of Empires II HD's menus) had lost its pointer: it followed only at a present |
-+| 0990 | `libxess`, `libxess_fg`, `libxell`: stub Intel XeSS libraries (LGPL). Games that ship Intel's XeSS upscaling libraries import them statically, so the loader won't start the program without them. These builtins export every XeSS SDK function but return "unsupported device": the game sees no XeSS hardware and falls back to FSR or native. The title overrides them to builtin (`=b`) so Wine's copies replace the game's |
++| 1000 | `libxess`, `libxess_fg`, `libxell`: stub Intel XeSS libraries (LGPL). Games that ship Intel's XeSS upscaling libraries import them statically, so the loader won't start the program without them. These builtins export every XeSS SDK function but return "unsupported device": the game sees no XeSS hardware and falls back to FSR or native. The title overrides them to builtin (`=b`) so Wine's copies replace the game's |
  | 0983 | `ntdll`: a refused fixed reservation names what holds the range. `sceKernelReserveVirtualRange` answers ENOMEM both for a range another mapping holds and for one it cannot grant, and the callers need `EEXIST` for a collision either way, so the errno is unchanged and `sceKernelVirtualQuery` reports the cause: a record with a protection, flags and a name is a mapping, a cleared record past the end of the request is a hole. Tells a title image lying across a program's preferred base (0130) apart from an exhausted address space |
-diff --git a/wine/patches/0990-stub-intel-xess-for-games-that-ship-them.patch b/wine/patches/0990-stub-intel-xess-for-games-that-ship-them.patch
+diff --git a/wine/patches/1000-stub-intel-xess-for-games-that-ship-them.patch b/wine/patches/1000-stub-intel-xess-for-games-that-ship-them.patch
 new file mode 100644
 index 0000000..a1b2c3d
 --- /dev/null
-+++ b/wine/patches/0990-stub-intel-xess-for-games-that-ship-them.patch
++++ b/wine/patches/1000-stub-intel-xess-for-games-that-ship-them.patch
 @@ -0,0 +1,615 @@
 +From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 +From: bornaradusin <bornaradusin@users.noreply.github.com>
