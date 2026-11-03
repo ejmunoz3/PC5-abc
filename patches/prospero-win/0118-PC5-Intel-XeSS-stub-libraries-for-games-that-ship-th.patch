@@ -29,7 +29,7 @@ diff --git a/PUBLICATION_ALLOWLIST.txt b/PUBLICATION_ALLOWLIST.txt
 index cf79d4e..d5e6f7a 100644
 --- a/PUBLICATION_ALLOWLIST.txt
 +++ b/PUBLICATION_ALLOWLIST.txt
-@@ -680,6 +680,7 @@ wine/patches/0976-ntdll-ps5-boolean-socket-options-read-back-as-one.patch
+@@ -680,5 +680,6 @@ wine/patches/0976-ntdll-ps5-boolean-socket-options-read-back-as-one.patch
  wine/patches/0977-win32u-the-cursor-clip-stays-inside-the-virtual-screen.patch
  wine/patches/0978-amd-ags-x64-a-driver-version-for-amd-sponsored-games.patch
  wine/patches/0983-ntdll-ps5-name-the-occupant-of-a-refused-reservation.patch
