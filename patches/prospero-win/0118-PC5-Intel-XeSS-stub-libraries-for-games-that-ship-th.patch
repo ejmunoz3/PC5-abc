@@ -1,0 +1,685 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: bornaradusin <bornaradusin@users.noreply.github.com>
+Date: Mon, 2 Nov 2026 23:30:00 +0000
+Subject: [PATCH] PC5: Intel XeSS stub libraries for games that ship them (Wine
+ patch 0990)
+
+EA Sports College Football 27 ships Intel's XeSS libraries (libxess.dll,
+libxess_fg.dll, libxell.dll) and imports them statically: the PE loader
+requires them to exist.  On the PS5's AMD GPU the game's own copies
+initialise against no Intel driver and crash or return values the game
+takes for valid.  Disabling them (=d) doesn't work because the loader
+won't start the program without them (STATUS_DLL_NOT_FOUND, c0000135).
+
+Wine patch 0990 adds stub builtins that export every public XeSS SDK
+function but return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE (-1) from any
+call that creates a context or initialises.  The game sees "no XeSS
+hardware" and falls back to its other upscaler (FSR, native).  The title
+overrides libxess, libxess_fg, libxell to builtin (=b) so Wine's copies
+replace the game's.
+---
+ PUBLICATION_ALLOWLIST.txt                     |   1 +
+ THIRD_PARTY.md                                |   3 +
+ docs/WINE_PS5_BUILD.md                        |   1 +
+ ...stub-intel-xess-for-games-that-ship-them.patch | 615 +++++++++++++++++++++
+ 4 files changed, 620 insertions(+)
+ create mode 100644 wine/patches/0990-stub-intel-xess-for-games-that-ship-them.patch
+
+diff --git a/PUBLICATION_ALLOWLIST.txt b/PUBLICATION_ALLOWLIST.txt
+index cf79d4e..d5e6f7a 100644
+--- a/PUBLICATION_ALLOWLIST.txt
++++ b/PUBLICATION_ALLOWLIST.txt
+@@ -680,6 +680,7 @@ wine/patches/0976-ntdll-ps5-boolean-socket-options-read-back-as-one.patch
+ wine/patches/0977-win32u-the-cursor-clip-stays-inside-the-virtual-screen.patch
+ wine/patches/0978-amd-ags-x64-a-driver-version-for-amd-sponsored-games.patch
+ wine/patches/0983-ntdll-ps5-name-the-occupant-of-a-refused-reservation.patch
++wine/patches/0990-stub-intel-xess-for-games-that-ship-them.patch
+ tests/test_wine_mouse_wheel.py
+ 
+diff --git a/THIRD_PARTY.md b/THIRD_PARTY.md
+index f5cc7d9..e6f7a8b 100644
+--- a/THIRD_PARTY.md
++++ b/THIRD_PARTY.md
+@@ -42,6 +42,9 @@ the same licence.
+ ([ValveSoftware/wine](https://github.com/ValveSoftware/wine), its
+ `dlls/amd_ags_x64`, LGPL-2.1-or-later), brought in by Wine patch 0978; its
+ `amd_ags.h` is AMD's AGS SDK header, under the MIT licence.
++`libxess.dll`, `libxess_fg.dll` and `libxell.dll` are stub libraries for
++Intel's XeSS SDK (LGPL-2.1-or-later), brought in by Wine patch 0990, so
++games that ship Intel XeSS load without needing an Intel GPU.
+ 
+ Wine includes code from other projects (zlib, libpng, FAudio, the LLVM C++
+ runtime, Unicode data and more). `LICENSES/wine/` holds Wine's `LICENSE`,
+diff --git a/docs/WINE_PS5_BUILD.md b/docs/WINE_PS5_BUILD.md
+index dcfbb5a..f7a8b9c 100644
+--- a/docs/WINE_PS5_BUILD.md
++++ b/docs/WINE_PS5_BUILD.md
+@@ -183,6 +183,7 @@ before evaluating a candidate built from that cache.
+ | 0976 | `ntdll` (Mihawk OS 2085): on PS5, a boolean socket option (`SO_BROADCAST`, `SO_KEEPALIVE`, `SO_REUSEADDR` and the other boolean `SOL_SOCKET` ones, `TCP_NODELAY`) reads back as 0 or 1, as on Windows and Linux. The console's FreeBSD kernel answered with the option's flag bit (`SO_BROADCAST` as 0x20), so a program that compares the value with TRUE took a set option for unset |
+ | 0977 | `win32u` (Mihawk OS 2152): `GetClipCursor` keeps the clip inside the virtual screen. In an emulated display mode (a 640x480 mode drawn letterboxed on the 1920x1080 output) the unclipped raw rect is the whole physical screen, which mapped back into the mode reached past its sides |
+ | 0978 | `amd_ags_x64` (Proton's, ValveSoftware/wine, LGPL; `amd_ags.h` AMD's, MIT): AMD's GPU Services library as a builtin, answering from the Vulkan device with a current driver version, so AMD-sponsored games (Marvel's Spider-Man Remastered, The Last of Us Part II) don't take the PS5 for a missing or outdated driver; AGS's Direct3D 11 and 12 extensions go to DXVK and VKD3D-Proton. No Unix side (no libdrm on the PS5). A title overrides `amd_ags_x64` to builtin for a game's own copy to give way |
++| 0990 | `libxess`, `libxess_fg`, `libxell`: stub Intel XeSS libraries (LGPL). Games that ship Intel's XeSS upscaling libraries import them statically, so the loader won't start the program without them. These builtins export every XeSS SDK function but return "unsupported device": the game sees no XeSS hardware and falls back to FSR or native. The title overrides them to builtin (`=b`) so Wine's copies replace the game's |
+ | 0983 | `ntdll`: a refused fixed reservation names what holds the range. `sceKernelReserveVirtualRange` answers ENOMEM both for a range another mapping holds and for one it cannot grant, and the callers need `EEXIST` for a collision either way, so the errno is unchanged and `sceKernelVirtualQuery` reports the cause: a record with a protection, flags and a name is a mapping, a cleared record past the end of the request is a hole. Tells a title image lying across a program's preferred base (0130) apart from an exhausted address space |
+ 
+ ## Allocator
+diff --git a/wine/patches/0990-stub-intel-xess-for-games-that-ship-them.patch b/wine/patches/0990-stub-intel-xess-for-games-that-ship-them.patch
+new file mode 100644
+index 0000000..a1b2c3d
+--- /dev/null
++++ b/wine/patches/0990-stub-intel-xess-for-games-that-ship-them.patch
+@@ -0,0 +1,615 @@
++From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
++From: bornaradusin <bornaradusin@users.noreply.github.com>
++Date: Mon, 2 Nov 2026 23:30:00 +0000
++Subject: [PATCH] libxess, libxess_fg, libxell: stub Intel XeSS libraries for
++ games that ship them.
++
++Games that support Intel's XeSS upscaling ship Intel's libraries
++(libxess.dll for super resolution, libxess_fg.dll for frame generation,
++libxell.dll for latency): the game's PE import table references them
++directly, so they must exist for the loader to start the program.
++
++On the PS5's AMD GPU these libraries have no Intel device to talk to.
++The game's own copies initialise, get garbage back (no Intel GPU driver
++answers), and crash or return values the game takes for valid (EA Sports
++College Football 27). Disabling them with =d doesn't work because they
++are static imports: the loader refuses to start the program at all.
++
++These builtins export every public function from Intel's XeSS SDK 2.x
++headers but return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE (-1) or
++XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE (-1) from any call that
++creates a context or initialises: the game sees "no XeSS hardware" and
++falls back to its other upscaler (FSR, native). Functions that query
++version return 0, and destroy/cleanup functions succeed silently.
++---
++diff --git a/configure b/configure
++index 50b8006..1a2b3c4 100755
++--- a/configure
+++++ b/configure
++@@ -1243,6 +1243,9 @@ enable_kernelbase
++ enable_ksecdd
++ enable_ktmw32
++ enable_l3codecx_ax
+++enable_libxell
+++enable_libxess
+++enable_libxess_fg
++ enable_loadperf
++ enable_localspl
++ enable_localui
++@@ -22413,6 +22416,9 @@ wine_fn_config_makefile dlls/ksecdd enable_ksecdd
++ wine_fn_config_makefile dlls/ktmw32 enable_ktmw32
++ wine_fn_config_makefile dlls/ktmw32/tests enable_tests
++ wine_fn_config_makefile dlls/l3codecx.ax enable_l3codecx_ax
+++wine_fn_config_makefile dlls/libxell enable_libxell
+++wine_fn_config_makefile dlls/libxess enable_libxess
+++wine_fn_config_makefile dlls/libxess_fg enable_libxess_fg
++ wine_fn_config_makefile dlls/loadperf enable_loadperf
++ wine_fn_config_makefile dlls/loadperf/tests enable_tests
++ wine_fn_config_makefile dlls/localspl enable_localspl
++diff --git a/configure.ac b/configure.ac
++index eae581f..b3c4d5e 100644
++--- a/configure.ac
+++++ b/configure.ac
++@@ -2858,6 +2858,9 @@ WINE_CONFIG_MAKEFILE(dlls/ksecdd)
++ WINE_CONFIG_MAKEFILE(dlls/ktmw32)
++ WINE_CONFIG_MAKEFILE(dlls/ktmw32/tests)
++ WINE_CONFIG_MAKEFILE(dlls/l3codecx.ax)
+++WINE_CONFIG_MAKEFILE(dlls/libxell)
+++WINE_CONFIG_MAKEFILE(dlls/libxess)
+++WINE_CONFIG_MAKEFILE(dlls/libxess_fg)
++ WINE_CONFIG_MAKEFILE(dlls/loadperf)
++ WINE_CONFIG_MAKEFILE(dlls/loadperf/tests)
++ WINE_CONFIG_MAKEFILE(dlls/localspl)
++diff --git a/dlls/libxell/Makefile.in b/dlls/libxell/Makefile.in
++new file mode 100644
++index 0000000..a1b2c3d
++--- /dev/null
+++++ b/dlls/libxell/Makefile.in
++@@ -0,0 +1,5 @@
+++MODULE    = libxell.dll
+++
+++EXTRADLLFLAGS = -mno-cygwin
+++
+++SOURCES = libxell_main.c
++diff --git a/dlls/libxell/libxell.spec b/dlls/libxell/libxell.spec
++new file mode 100644
++index 0000000..b2c3d4e
++--- /dev/null
+++++ b/dlls/libxell/libxell.spec
++@@ -0,0 +1,7 @@
+++@ cdecl xellD3D12CreateContext(ptr ptr)
+++@ cdecl xellDestroyContext(ptr)
+++@ cdecl xellGetVersion(ptr)
+++@ cdecl xellSetLoggingCallback(ptr ptr)
+++@ cdecl xellSetSleepMode(ptr long)
+++@ cdecl xellSleep(ptr)
+++@ cdecl xellAddMarkerData(ptr long ptr long)
++diff --git a/dlls/libxell/libxell_main.c b/dlls/libxell/libxell_main.c
++new file mode 100644
++index 0000000..c3d4e5f
++--- /dev/null
+++++ b/dlls/libxell/libxell_main.c
++@@ -0,0 +1,72 @@
+++/*
+++ * Intel XeLL (XeSS Low Latency) stub library.
+++ *
+++ * Every public function from Intel's XeSS SDK, returning
+++ * XESS_RESULT_ERROR_UNSUPPORTED_DEVICE where a result is expected,
+++ * so games that statically import libxell.dll load and discover
+++ * there is no Intel GPU without crashing.
+++ *
+++ * LGPL-2.1-or-later
+++ */
+++
+++#include <stddef.h>
+++
+++#define XESS_RESULT_ERROR_UNSUPPORTED_DEVICE (-1)
+++
+++typedef int xess_result_t;
+++typedef void *xess_context_handle_t;
+++typedef unsigned int xess_version_t;
+++
+++typedef struct {
+++    unsigned int major;
+++    unsigned int minor;
+++    unsigned int patch;
+++    unsigned int reserved;
+++} xess_version_struct_t;
+++
+++typedef void (*xess_logging_callback_t)(const char *, void *);
+++
+++/* xellD3D12CreateContext: answer "unsupported" so the game doesn't try to use XeLL. */
+++xess_result_t __cdecl xellD3D12CreateContext(void *d3d12_device, xess_context_handle_t *context)
+++{
+++    if (context) *context = NULL;
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xellDestroyContext: nothing to destroy. */
+++xess_result_t __cdecl xellDestroyContext(xess_context_handle_t context)
+++{
+++    return 0; /* XESS_RESULT_SUCCESS */
+++}
+++
+++/* xellGetVersion: return zeroes. */
+++xess_result_t __cdecl xellGetVersion(xess_version_struct_t *version)
+++{
+++    if (version) { version->major = 0; version->minor = 0; version->patch = 0; version->reserved = 0; }
+++    return 0;
+++}
+++
+++/* xellSetLoggingCallback: accept and ignore. */
+++xess_result_t __cdecl xellSetLoggingCallback(xess_context_handle_t context, xess_logging_callback_t callback)
+++{
+++    return 0;
+++}
+++
+++/* xellSetSleepMode: no device to set a sleep mode on. */
+++xess_result_t __cdecl xellSetSleepMode(xess_context_handle_t context, int mode)
+++{
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xellSleep: nothing to sleep. */
+++xess_result_t __cdecl xellSleep(xess_context_handle_t context)
+++{
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xellAddMarkerData: no device. */
+++xess_result_t __cdecl xellAddMarkerData(xess_context_handle_t context, unsigned int type, void *data, unsigned int size)
+++{
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
++diff --git a/dlls/libxess/Makefile.in b/dlls/libxess/Makefile.in
++new file mode 100644
++index 0000000..d4e5f6a
++--- /dev/null
+++++ b/dlls/libxess/Makefile.in
++@@ -0,0 +1,5 @@
+++MODULE    = libxess.dll
+++
+++EXTRADLLFLAGS = -mno-cygwin
+++
+++SOURCES = libxess_main.c
++diff --git a/dlls/libxess/libxess.spec b/dlls/libxess/libxess.spec
++new file mode 100644
++index 0000000..e5f6a7b
++--- /dev/null
+++++ b/dlls/libxess/libxess.spec
++@@ -0,0 +1,23 @@
+++@ cdecl xessGetVersion(ptr)
+++@ cdecl xessGetIntelXeFXVersion(ptr)
+++@ cdecl xessGetProperties(ptr ptr)
+++@ cdecl xessGetInputResolution(ptr ptr ptr ptr ptr)
+++@ cdecl xessGetOptimalInputResolution(ptr long long long ptr ptr ptr ptr)
+++@ cdecl xessGetJitterScale(ptr ptr ptr)
+++@ cdecl xessGetVelocityScale(ptr ptr ptr)
+++@ cdecl xessDestroyContext(ptr)
+++@ cdecl xessSetJitterScale(ptr float float)
+++@ cdecl xessSetVelocityScale(ptr float float)
+++@ cdecl xessSetExposureMultiplier(ptr float)
+++@ cdecl xessGetExposureMultiplier(ptr ptr)
+++@ cdecl xessSetMaxResponsiveMaskValue(ptr float)
+++@ cdecl xessGetMaxResponsiveMaskValue(ptr ptr)
+++@ cdecl xessSetLoggingCallback(ptr ptr)
+++@ cdecl xessIsOptimalDriver(ptr)
+++@ cdecl xessForceLegacyScaleFactors(ptr long)
+++@ cdecl xessGetPipelineBuildStatus(ptr)
+++@ cdecl xessD3D12CreateContext(ptr ptr)
+++@ cdecl xessD3D12BuildPipelines(ptr ptr long long ptr long)
+++@ cdecl xessD3D12Init(ptr ptr)
+++@ cdecl xessD3D12GetInitParams(ptr ptr)
+++@ cdecl xessD3D12Execute(ptr ptr ptr)
++diff --git a/dlls/libxess/libxess_main.c b/dlls/libxess/libxess_main.c
++new file mode 100644
++index 0000000..f6a7b8c
++--- /dev/null
+++++ b/dlls/libxess/libxess_main.c
++@@ -0,0 +1,174 @@
+++/*
+++ * Intel XeSS (Super Resolution) stub library.
+++ *
+++ * Every public function from Intel's XeSS SDK, returning
+++ * XESS_RESULT_ERROR_UNSUPPORTED_DEVICE where a result is expected,
+++ * so games that statically import libxess.dll load and discover
+++ * there is no Intel GPU without crashing.
+++ *
+++ * LGPL-2.1-or-later
+++ */
+++
+++#include <stddef.h>
+++
+++#define XESS_RESULT_SUCCESS                    0
+++#define XESS_RESULT_ERROR_UNSUPPORTED_DEVICE (-1)
+++
+++typedef int xess_result_t;
+++typedef void *xess_context_handle_t;
+++
+++typedef struct {
+++    unsigned int major;
+++    unsigned int minor;
+++    unsigned int patch;
+++    unsigned int reserved;
+++} xess_version_t;
+++
+++typedef struct {
+++    int min_driver_supported;
+++    int optimal_driver_supported;
+++    int xess_available;
+++} xess_properties_t;
+++
+++typedef void (*xess_logging_callback_t)(const char *, void *);
+++
+++/* xessGetVersion: return zeroes. */
+++xess_result_t __cdecl xessGetVersion(xess_version_t *version)
+++{
+++    if (version) { version->major = 0; version->minor = 0; version->patch = 0; version->reserved = 0; }
+++    return XESS_RESULT_SUCCESS;
+++}
+++
+++/* xessGetIntelXeFXVersion: return zeroes. */
+++xess_result_t __cdecl xessGetIntelXeFXVersion(xess_version_t *version)
+++{
+++    if (version) { version->major = 0; version->minor = 0; version->patch = 0; version->reserved = 0; }
+++    return XESS_RESULT_SUCCESS;
+++}
+++
+++/* xessGetProperties: report everything unavailable. */
+++xess_result_t __cdecl xessGetProperties(xess_context_handle_t context, xess_properties_t *props)
+++{
+++    if (props) { props->min_driver_supported = 0; props->optimal_driver_supported = 0; props->xess_available = 0; }
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessGetInputResolution: no resolution to report. */
+++xess_result_t __cdecl xessGetInputResolution(xess_context_handle_t context,
+++    unsigned int *width, unsigned int *height,
+++    unsigned int *right, unsigned int *bottom)
+++{
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessGetOptimalInputResolution: no resolution to report. */
+++xess_result_t __cdecl xessGetOptimalInputResolution(xess_context_handle_t context,
+++    int quality, unsigned int output_width, unsigned int output_height,
+++    unsigned int *input_width, unsigned int *input_height,
+++    unsigned int *right, unsigned int *bottom)
+++{
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessGetJitterScale: no jitter. */
+++xess_result_t __cdecl xessGetJitterScale(xess_context_handle_t context, float *x, float *y)
+++{
+++    if (x) *x = 0.0f;
+++    if (y) *y = 0.0f;
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessGetVelocityScale: no velocity. */
+++xess_result_t __cdecl xessGetVelocityScale(xess_context_handle_t context, float *x, float *y)
+++{
+++    if (x) *x = 0.0f;
+++    if (y) *y = 0.0f;
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessDestroyContext: nothing to destroy. */
+++xess_result_t __cdecl xessDestroyContext(xess_context_handle_t context)
+++{
+++    return XESS_RESULT_SUCCESS;
+++}
+++
+++/* xessSetJitterScale: accept silently. */
+++xess_result_t __cdecl xessSetJitterScale(xess_context_handle_t context, float x, float y)
+++{
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessSetVelocityScale: accept silently. */
+++xess_result_t __cdecl xessSetVelocityScale(xess_context_handle_t context, float x, float y)
+++{
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessSetExposureMultiplier: accept silently. */
+++xess_result_t __cdecl xessSetExposureMultiplier(xess_context_handle_t context, float multiplier)
+++{
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessGetExposureMultiplier: no value. */
+++xess_result_t __cdecl xessGetExposureMultiplier(xess_context_handle_t context, float *multiplier)
+++{
+++    if (multiplier) *multiplier = 1.0f;
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessSetMaxResponsiveMaskValue: accept silently. */
+++xess_result_t __cdecl xessSetMaxResponsiveMaskValue(xess_context_handle_t context, float value)
+++{
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessGetMaxResponsiveMaskValue: no value. */
+++xess_result_t __cdecl xessGetMaxResponsiveMaskValue(xess_context_handle_t context, float *value)
+++{
+++    if (value) *value = 0.0f;
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessSetLoggingCallback: accept and ignore. */
+++xess_result_t __cdecl xessSetLoggingCallback(xess_context_handle_t context, xess_logging_callback_t callback)
+++{
+++    return XESS_RESULT_SUCCESS;
+++}
+++
+++/* xessIsOptimalDriver: no, there's no Intel driver. */
+++xess_result_t __cdecl xessIsOptimalDriver(xess_context_handle_t context)
+++{
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessForceLegacyScaleFactors: accept silently. */
+++xess_result_t __cdecl xessForceLegacyScaleFactors(xess_context_handle_t context, int force)
+++{
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessGetPipelineBuildStatus: not built. */
+++xess_result_t __cdecl xessGetPipelineBuildStatus(xess_context_handle_t context)
+++{
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessD3D12CreateContext: the key function -- say "unsupported". */
+++xess_result_t __cdecl xessD3D12CreateContext(void *d3d12_device, xess_context_handle_t *context)
+++{
+++    if (context) *context = NULL;
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessD3D12BuildPipelines: no context. */
+++xess_result_t __cdecl xessD3D12BuildPipelines(xess_context_handle_t context,
+++    void *pipeline_library, int wait, int init_flags, void *pipelines, int count)
+++{
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessD3D12Init: no device. */
+++xess_result_t __cdecl xessD3D12Init(xess_context_handle_t context, void *init_params)
+++{
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessD3D12GetInitParams: no params. */
+++xess_result_t __cdecl xessD3D12GetInitParams(xess_context_handle_t context, void *init_params)
+++{
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xessD3D12Execute: nothing to execute. */
+++xess_result_t __cdecl xessD3D12Execute(xess_context_handle_t context, void *cmd_list, void *exec_params)
+++{
+++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
++diff --git a/dlls/libxess_fg/Makefile.in b/dlls/libxess_fg/Makefile.in
++new file mode 100644
++index 0000000..a2b3c4d
++--- /dev/null
+++++ b/dlls/libxess_fg/Makefile.in
++@@ -0,0 +1,5 @@
+++MODULE    = libxess_fg.dll
+++
+++EXTRADLLFLAGS = -mno-cygwin
+++
+++SOURCES = libxess_fg_main.c
++diff --git a/dlls/libxess_fg/libxess_fg.spec b/dlls/libxess_fg/libxess_fg.spec
++new file mode 100644
++index 0000000..b3c4d5e
++--- /dev/null
+++++ b/dlls/libxess_fg/libxess_fg.spec
++@@ -0,0 +1,23 @@
+++@ cdecl xefgSwapChainD3D12BuildPipelines(ptr ptr long)
+++@ cdecl xefgSwapChainD3D12CreateContext(ptr ptr)
+++@ cdecl xefgSwapChainD3D12GetInitializationParameters(ptr ptr)
+++@ cdecl xefgSwapChainD3D12GetProperties(ptr ptr)
+++@ cdecl xefgSwapChainD3D12GetSwapChainPtr(ptr ptr)
+++@ cdecl xefgSwapChainD3D12InitFromSwapChain(ptr ptr ptr ptr)
+++@ cdecl xefgSwapChainD3D12InitFromSwapChainDesc(ptr ptr ptr ptr)
+++@ cdecl xefgSwapChainD3D12SetDescriptorHeap(ptr ptr)
+++@ cdecl xefgSwapChainD3D12TagFrameResource(ptr ptr long long)
+++@ cdecl xefgSwapChainD3D12UpdateExternalHeapOnResize(ptr ptr)
+++@ cdecl xefgSwapChainDestroy(ptr)
+++@ cdecl xefgSwapChainEnableDebugFeature(ptr long)
+++@ cdecl xefgSwapChainGetLastPresentStatus(ptr ptr)
+++@ cdecl xefgSwapChainGetPipelineBuildStatus(ptr)
+++@ cdecl xefgSwapChainGetProperties(ptr ptr)
+++@ cdecl xefgSwapChainGetVersion(ptr)
+++@ cdecl xefgSwapChainSetEnabled(ptr long)
+++@ cdecl xefgSwapChainSetLatencyReduction(ptr long)
+++@ cdecl xefgSwapChainSetLoggingCallback(ptr ptr)
+++@ cdecl xefgSwapChainSetNumInterpolatedFrames(ptr long)
+++@ cdecl xefgSwapChainSetPresentId(ptr int64)
+++@ cdecl xefgSwapChainSetUiCompositionState(ptr long)
+++@ cdecl xefgSwapChainTagFrameConstants(ptr ptr)
++diff --git a/dlls/libxess_fg/libxess_fg_main.c b/dlls/libxess_fg/libxess_fg_main.c
++new file mode 100644
++index 0000000..d5e6f7a
++--- /dev/null
+++++ b/dlls/libxess_fg/libxess_fg_main.c
++@@ -0,0 +1,179 @@
+++/*
+++ * Intel XeSS-FG (Frame Generation) stub library.
+++ *
+++ * Every public function from Intel's XeSS SDK, returning
+++ * XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE where a result is expected,
+++ * so games that statically import libxess_fg.dll load and discover
+++ * there is no Intel GPU without crashing.
+++ *
+++ * LGPL-2.1-or-later
+++ */
+++
+++#include <stddef.h>
+++#include <stdint.h>
+++
+++#define XEFG_SWAPCHAIN_RESULT_SUCCESS                    0
+++#define XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE (-1)
+++
+++typedef int xefg_swapchain_result_t;
+++typedef void *xefg_swapchain_handle_t;
+++
+++typedef struct {
+++    unsigned int major;
+++    unsigned int minor;
+++    unsigned int patch;
+++    unsigned int reserved;
+++} xefg_swapchain_version_t;
+++
+++typedef void (*xefg_logging_callback_t)(const char *, void *);
+++
+++/* xefgSwapChainD3D12BuildPipelines: no device. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12BuildPipelines(xefg_swapchain_handle_t handle,
+++    void *pipeline_library, int wait)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainD3D12CreateContext: the key function -- say "unsupported". */
+++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12CreateContext(void *d3d12_device, xefg_swapchain_handle_t *handle)
+++{
+++    if (handle) *handle = NULL;
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainD3D12GetInitializationParameters: no params. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12GetInitializationParameters(xefg_swapchain_handle_t handle, void *params)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainD3D12GetProperties: unsupported. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12GetProperties(xefg_swapchain_handle_t handle, void *props)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainD3D12GetSwapChainPtr: no swap chain. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12GetSwapChainPtr(xefg_swapchain_handle_t handle, void **swap_chain)
+++{
+++    if (swap_chain) *swap_chain = NULL;
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainD3D12InitFromSwapChain: no device. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12InitFromSwapChain(xefg_swapchain_handle_t handle,
+++    void *cmd_queue, void *swap_chain, void *params)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainD3D12InitFromSwapChainDesc: no device. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12InitFromSwapChainDesc(xefg_swapchain_handle_t handle,
+++    void *cmd_queue, void *desc, void *params)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainD3D12SetDescriptorHeap: no context. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12SetDescriptorHeap(xefg_swapchain_handle_t handle, void *heap)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainD3D12TagFrameResource: no context. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12TagFrameResource(xefg_swapchain_handle_t handle,
+++    void *resource, int type, int flags)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainD3D12UpdateExternalHeapOnResize: no context. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12UpdateExternalHeapOnResize(xefg_swapchain_handle_t handle, void *heap)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainDestroy: nothing to destroy. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainDestroy(xefg_swapchain_handle_t handle)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_SUCCESS;
+++}
+++
+++/* xefgSwapChainEnableDebugFeature: accept silently. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainEnableDebugFeature(xefg_swapchain_handle_t handle, int feature)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainGetLastPresentStatus: no present. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainGetLastPresentStatus(xefg_swapchain_handle_t handle, void *status)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainGetPipelineBuildStatus: not built. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainGetPipelineBuildStatus(xefg_swapchain_handle_t handle)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainGetProperties: unsupported (non-D3D12 variant). */
+++xefg_swapchain_result_t __cdecl xefgSwapChainGetProperties(xefg_swapchain_handle_t handle, void *props)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainGetVersion: return zeroes. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainGetVersion(xefg_swapchain_version_t *version)
+++{
+++    if (version) { version->major = 0; version->minor = 0; version->patch = 0; version->reserved = 0; }
+++    return XEFG_SWAPCHAIN_RESULT_SUCCESS;
+++}
+++
+++/* xefgSwapChainSetEnabled: accept silently. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainSetEnabled(xefg_swapchain_handle_t handle, int enabled)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainSetLatencyReduction: accept silently. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainSetLatencyReduction(xefg_swapchain_handle_t handle, int enabled)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainSetLoggingCallback: accept and ignore. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainSetLoggingCallback(xefg_swapchain_handle_t handle, xefg_logging_callback_t callback)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_SUCCESS;
+++}
+++
+++/* xefgSwapChainSetNumInterpolatedFrames: accept silently. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainSetNumInterpolatedFrames(xefg_swapchain_handle_t handle, int count)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainSetPresentId: accept silently. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainSetPresentId(xefg_swapchain_handle_t handle, int64_t present_id)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainSetUiCompositionState: accept silently. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainSetUiCompositionState(xefg_swapchain_handle_t handle, int state)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
+++
+++/* xefgSwapChainTagFrameConstants: no context. */
+++xefg_swapchain_result_t __cdecl xefgSwapChainTagFrameConstants(xefg_swapchain_handle_t handle, void *constants)
+++{
+++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
+++}
