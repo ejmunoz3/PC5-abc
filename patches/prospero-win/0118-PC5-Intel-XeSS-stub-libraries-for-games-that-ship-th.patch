@@ -21,8 +21,8 @@ replace the game's.
  PUBLICATION_ALLOWLIST.txt                     |   1 +
  THIRD_PARTY.md                                |   3 +
  docs/WINE_PS5_BUILD.md                        |   1 +
- ...stub-intel-xess-for-games-that-ship-them.patch | 607 +++++++++++++++++++++
- 4 files changed, 612 insertions(+)
+ ...stub-intel-xess-for-games-that-ship-them.patch | 619 +++++++++++++++++++++
+ 4 files changed, 624 insertions(+)
  create mode 100644 wine/patches/0950-stub-intel-xess-for-games-that-ship-them.patch
 
 diff --git a/PUBLICATION_ALLOWLIST.txt b/PUBLICATION_ALLOWLIST.txt
@@ -58,7 +58,7 @@ new file mode 100644
 index 0000000..a1b2c3d
 --- /dev/null
 +++ b/wine/patches/0950-stub-intel-xess-for-games-that-ship-them.patch
-@@ -0,0 +1,607 @@
+@@ -0,0 +1,619 @@
 +From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 +From: bornaradusin <bornaradusin@users.noreply.github.com>
 +Date: Mon, 2 Nov 2026 23:30:00 +0000
@@ -142,7 +142,7 @@ index 0000000..a1b2c3d
 +index 0000000..c3d4e5f
 +--- /dev/null
 ++++ b/dlls/libxell/libxell_main.c
-+@@ -0,0 +1,71 @@
++@@ -0,0 +1,75 @@
 ++/*
 ++ * Intel XeLL (XeSS Low Latency) stub library.
 ++ *
@@ -155,6 +155,10 @@ index 0000000..a1b2c3d
 ++ */
 ++
 ++#include <stddef.h>
+++#include "windef.h"
+++#include "wine/debug.h"
+++
+++WINE_DEFAULT_DEBUG_CHANNEL(xess);
 ++
 ++#define XESS_RESULT_ERROR_UNSUPPORTED_DEVICE (-1)
 ++
@@ -171,47 +175,47 @@ index 0000000..a1b2c3d
 ++
 ++typedef void (*xess_logging_callback_t)(const char *, void *);
 ++
-++/* xellD3D12CreateContext: answer "unsupported" so the game doesn't try to use XeLL. */
 ++xess_result_t __cdecl xellD3D12CreateContext(void *d3d12_device, xess_context_handle_t *context)
 ++{
+++    FIXME("(%p, %p) stub\n", d3d12_device, context);
 ++    if (context) *context = NULL;
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xellDestroyContext: nothing to destroy. */
 ++xess_result_t __cdecl xellDestroyContext(xess_context_handle_t context)
 ++{
-++    return 0; /* XESS_RESULT_SUCCESS */
+++    FIXME("(%p) stub\n", context);
+++    return 0;
 ++}
 ++
-++/* xellGetVersion: return zeroes. */
 ++xess_result_t __cdecl xellGetVersion(xess_version_struct_t *version)
 ++{
+++    FIXME("(%p) stub\n", version);
 ++    if (version) { version->major = 0; version->minor = 0; version->patch = 0; version->reserved = 0; }
 ++    return 0;
 ++}
 ++
-++/* xellSetLoggingCallback: accept and ignore. */
 ++xess_result_t __cdecl xellSetLoggingCallback(xess_context_handle_t context, xess_logging_callback_t callback)
 ++{
+++    FIXME("(%p, %p) stub\n", context, callback);
 ++    return 0;
 ++}
 ++
-++/* xellSetSleepMode: no device to set a sleep mode on. */
 ++xess_result_t __cdecl xellSetSleepMode(xess_context_handle_t context, int mode)
 ++{
+++    FIXME("(%p, %d) stub\n", context, mode);
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xellSleep: nothing to sleep. */
 ++xess_result_t __cdecl xellSleep(xess_context_handle_t context)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xellAddMarkerData: no device. */
 ++xess_result_t __cdecl xellAddMarkerData(xess_context_handle_t context, unsigned int type, void *data, unsigned int size)
 ++{
+++    FIXME("(%p, %u, %p, %u) stub\n", context, type, data, size);
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 +diff --git a/dlls/libxess/Makefile.in b/dlls/libxess/Makefile.in
@@ -259,7 +263,7 @@ index 0000000..a1b2c3d
 +index 0000000..f6a7b8c
 +--- /dev/null
 ++++ b/dlls/libxess/libxess_main.c
-+@@ -0,0 +1,187 @@
++@@ -0,0 +1,191 @@
 ++/*
 ++ * Intel XeSS (Super Resolution) stub library.
 ++ *
@@ -272,6 +276,10 @@ index 0000000..a1b2c3d
 ++ */
 ++
 ++#include <stddef.h>
+++#include "windef.h"
+++#include "wine/debug.h"
+++
+++WINE_DEFAULT_DEBUG_CHANNEL(xess);
 ++
 ++#define XESS_RESULT_SUCCESS                    0
 ++#define XESS_RESULT_ERROR_UNSUPPORTED_DEVICE (-1)
@@ -294,157 +302,157 @@ index 0000000..a1b2c3d
 ++
 ++typedef void (*xess_logging_callback_t)(const char *, void *);
 ++
-++/* xessGetVersion: return zeroes. */
 ++xess_result_t __cdecl xessGetVersion(xess_version_t *version)
 ++{
+++    FIXME("(%p) stub\n", version);
 ++    if (version) { version->major = 0; version->minor = 0; version->patch = 0; version->reserved = 0; }
 ++    return XESS_RESULT_SUCCESS;
 ++}
 ++
-++/* xessGetIntelXeFXVersion: return zeroes. */
 ++xess_result_t __cdecl xessGetIntelXeFXVersion(xess_version_t *version)
 ++{
+++    FIXME("(%p) stub\n", version);
 ++    if (version) { version->major = 0; version->minor = 0; version->patch = 0; version->reserved = 0; }
 ++    return XESS_RESULT_SUCCESS;
 ++}
 ++
-++/* xessGetProperties: report everything unavailable. */
 ++xess_result_t __cdecl xessGetProperties(xess_context_handle_t context, xess_properties_t *props)
 ++{
+++    FIXME("(%p, %p) stub\n", context, props);
 ++    if (props) { props->min_driver_supported = 0; props->optimal_driver_supported = 0; props->xess_available = 0; }
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessGetInputResolution: no resolution to report. */
 ++xess_result_t __cdecl xessGetInputResolution(xess_context_handle_t context,
 ++    unsigned int *width, unsigned int *height,
 ++    unsigned int *right, unsigned int *bottom)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessGetOptimalInputResolution: no resolution to report. */
 ++xess_result_t __cdecl xessGetOptimalInputResolution(xess_context_handle_t context,
 ++    int quality, unsigned int output_width, unsigned int output_height,
 ++    unsigned int *input_width, unsigned int *input_height,
 ++    unsigned int *right, unsigned int *bottom)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessGetJitterScale: no jitter. */
 ++xess_result_t __cdecl xessGetJitterScale(xess_context_handle_t context, float *x, float *y)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    if (x) *x = 0.0f;
 ++    if (y) *y = 0.0f;
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessGetVelocityScale: no velocity. */
 ++xess_result_t __cdecl xessGetVelocityScale(xess_context_handle_t context, float *x, float *y)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    if (x) *x = 0.0f;
 ++    if (y) *y = 0.0f;
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessDestroyContext: nothing to destroy. */
 ++xess_result_t __cdecl xessDestroyContext(xess_context_handle_t context)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    return XESS_RESULT_SUCCESS;
 ++}
 ++
-++/* xessSetJitterScale: accept silently. */
 ++xess_result_t __cdecl xessSetJitterScale(xess_context_handle_t context, float x, float y)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessSetVelocityScale: accept silently. */
 ++xess_result_t __cdecl xessSetVelocityScale(xess_context_handle_t context, float x, float y)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessSetExposureMultiplier: accept silently. */
 ++xess_result_t __cdecl xessSetExposureMultiplier(xess_context_handle_t context, float multiplier)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessGetExposureMultiplier: no value. */
 ++xess_result_t __cdecl xessGetExposureMultiplier(xess_context_handle_t context, float *multiplier)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    if (multiplier) *multiplier = 1.0f;
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessSetMaxResponsiveMaskValue: accept silently. */
 ++xess_result_t __cdecl xessSetMaxResponsiveMaskValue(xess_context_handle_t context, float value)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessGetMaxResponsiveMaskValue: no value. */
 ++xess_result_t __cdecl xessGetMaxResponsiveMaskValue(xess_context_handle_t context, float *value)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    if (value) *value = 0.0f;
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessSetLoggingCallback: accept and ignore. */
 ++xess_result_t __cdecl xessSetLoggingCallback(xess_context_handle_t context, xess_logging_callback_t callback)
 ++{
+++    FIXME("(%p, %p) stub\n", context, callback);
 ++    return XESS_RESULT_SUCCESS;
 ++}
 ++
-++/* xessIsOptimalDriver: no, there's no Intel driver. */
 ++xess_result_t __cdecl xessIsOptimalDriver(xess_context_handle_t context)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessForceLegacyScaleFactors: accept silently. */
 ++xess_result_t __cdecl xessForceLegacyScaleFactors(xess_context_handle_t context, int force)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessGetPipelineBuildStatus: not built. */
 ++xess_result_t __cdecl xessGetPipelineBuildStatus(xess_context_handle_t context)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessD3D12CreateContext: the key function -- say "unsupported". */
 ++xess_result_t __cdecl xessD3D12CreateContext(void *d3d12_device, xess_context_handle_t *context)
 ++{
+++    FIXME("(%p, %p) stub\n", d3d12_device, context);
 ++    if (context) *context = NULL;
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessD3D12BuildPipelines: no context. */
 ++xess_result_t __cdecl xessD3D12BuildPipelines(xess_context_handle_t context,
 ++    void *pipeline_library, int wait, int init_flags, void *pipelines, int count)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessD3D12Init: no device. */
 ++xess_result_t __cdecl xessD3D12Init(xess_context_handle_t context, void *init_params)
 ++{
+++    FIXME("(%p, %p) stub\n", context, init_params);
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessD3D12GetInitParams: no params. */
 ++xess_result_t __cdecl xessD3D12GetInitParams(xess_context_handle_t context, void *init_params)
 ++{
+++    FIXME("(%p, %p) stub\n", context, init_params);
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xessD3D12Execute: nothing to execute. */
 ++xess_result_t __cdecl xessD3D12Execute(xess_context_handle_t context, void *cmd_list, void *exec_params)
 ++{
+++    FIXME("(%p) stub\n", context);
 ++    return XESS_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 +diff --git a/dlls/libxess_fg/Makefile.in b/dlls/libxess_fg/Makefile.in
@@ -492,7 +500,7 @@ index 0000000..a1b2c3d
 +index 0000000..d5e6f7a
 +--- /dev/null
 ++++ b/dlls/libxess_fg/libxess_fg_main.c
-+@@ -0,0 +1,173 @@
++@@ -0,0 +1,177 @@
 ++/*
 ++ * Intel XeSS-FG (Frame Generation) stub library.
 ++ *
@@ -506,6 +514,10 @@ index 0000000..a1b2c3d
 ++
 ++#include <stddef.h>
 ++#include <stdint.h>
+++#include "windef.h"
+++#include "wine/debug.h"
+++
+++WINE_DEFAULT_DEBUG_CHANNEL(xess);
 ++
 ++#define XEFG_SWAPCHAIN_RESULT_SUCCESS                    0
 ++#define XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE (-1)
@@ -522,147 +534,147 @@ index 0000000..a1b2c3d
 ++
 ++typedef void (*xefg_logging_callback_t)(const char *, void *);
 ++
-++/* xefgSwapChainD3D12BuildPipelines: no device. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12BuildPipelines(xefg_swapchain_handle_t handle,
 ++    void *pipeline_library, int wait)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainD3D12CreateContext: the key function -- say "unsupported". */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12CreateContext(void *d3d12_device, xefg_swapchain_handle_t *handle)
 ++{
+++    FIXME("(%p, %p) stub\n", d3d12_device, handle);
 ++    if (handle) *handle = NULL;
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainD3D12GetInitializationParameters: no params. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12GetInitializationParameters(xefg_swapchain_handle_t handle, void *params)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainD3D12GetProperties: unsupported. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12GetProperties(xefg_swapchain_handle_t handle, void *props)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainD3D12GetSwapChainPtr: no swap chain. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12GetSwapChainPtr(xefg_swapchain_handle_t handle, void **swap_chain)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    if (swap_chain) *swap_chain = NULL;
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainD3D12InitFromSwapChain: no device. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12InitFromSwapChain(xefg_swapchain_handle_t handle,
 ++    void *cmd_queue, void *swap_chain, void *params)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainD3D12InitFromSwapChainDesc: no device. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12InitFromSwapChainDesc(xefg_swapchain_handle_t handle,
 ++    void *cmd_queue, void *desc, void *params)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainD3D12SetDescriptorHeap: no context. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12SetDescriptorHeap(xefg_swapchain_handle_t handle, void *heap)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainD3D12TagFrameResource: no context. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12TagFrameResource(xefg_swapchain_handle_t handle,
 ++    void *resource, int type, int flags)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainD3D12UpdateExternalHeapOnResize: no context. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainD3D12UpdateExternalHeapOnResize(xefg_swapchain_handle_t handle, void *heap)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainDestroy: nothing to destroy. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainDestroy(xefg_swapchain_handle_t handle)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    return XEFG_SWAPCHAIN_RESULT_SUCCESS;
 ++}
 ++
-++/* xefgSwapChainEnableDebugFeature: accept silently. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainEnableDebugFeature(xefg_swapchain_handle_t handle, int feature)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainGetLastPresentStatus: no present. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainGetLastPresentStatus(xefg_swapchain_handle_t handle, void *status)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainGetPipelineBuildStatus: not built. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainGetPipelineBuildStatus(xefg_swapchain_handle_t handle)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainGetProperties: unsupported (non-D3D12 variant). */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainGetProperties(xefg_swapchain_handle_t handle, void *props)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainGetVersion: return zeroes. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainGetVersion(xefg_swapchain_version_t *version)
 ++{
+++    FIXME("(%p) stub\n", version);
 ++    if (version) { version->major = 0; version->minor = 0; version->patch = 0; version->reserved = 0; }
 ++    return XEFG_SWAPCHAIN_RESULT_SUCCESS;
 ++}
 ++
-++/* xefgSwapChainSetEnabled: accept silently. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainSetEnabled(xefg_swapchain_handle_t handle, int enabled)
 ++{
+++    FIXME("(%p, %d) stub\n", handle, enabled);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainSetLatencyReduction: accept silently. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainSetLatencyReduction(xefg_swapchain_handle_t handle, int enabled)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainSetLoggingCallback: accept and ignore. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainSetLoggingCallback(xefg_swapchain_handle_t handle, xefg_logging_callback_t callback)
 ++{
+++    FIXME("(%p, %p) stub\n", handle, callback);
 ++    return XEFG_SWAPCHAIN_RESULT_SUCCESS;
 ++}
 ++
-++/* xefgSwapChainSetNumInterpolatedFrames: accept silently. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainSetNumInterpolatedFrames(xefg_swapchain_handle_t handle, int count)
 ++{
+++    FIXME("(%p, %d) stub\n", handle, count);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainSetPresentId: accept silently. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainSetPresentId(xefg_swapchain_handle_t handle, int64_t present_id)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainSetUiCompositionState: accept silently. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainSetUiCompositionState(xefg_swapchain_handle_t handle, int state)
 ++{
+++    FIXME("(%p, %d) stub\n", handle, state);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
 ++
-++/* xefgSwapChainTagFrameConstants: no context. */
 ++xefg_swapchain_result_t __cdecl xefgSwapChainTagFrameConstants(xefg_swapchain_handle_t handle, void *constants)
 ++{
+++    FIXME("(%p) stub\n", handle);
 ++    return XEFG_SWAPCHAIN_RESULT_ERROR_UNSUPPORTED_DEVICE;
 ++}
