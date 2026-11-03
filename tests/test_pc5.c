@@ -1579,7 +1579,7 @@ static void test_install(void)
         pw_wine_library_load(pw, root);
         profile = pw_wine_library_find(pw, "orbital-nine");
         CHECK(profile && profile->app.graphics == PW_APP_GRAPHICS_DXVK &&
-              strstr(profile->app.dll_overrides, "d3d8,d3d9,d3d10core,d3d11,dxgi,d3d12,d3d12core,amd_ags_x64=b") &&
+              strstr(profile->app.dll_overrides, "d3d8,d3d9,d3d10core,d3d11,dxgi,d3d12,d3d12core,amd_ags_x64,libxess,libxess_fg,libxell=b") &&
               wine_d3d_vulkan(profile), "Wine's VKD3D: Wine's DLLs: %s", profile ? profile->app.dll_overrides : "-");
         k.graphics = PC5_GRAPHICS_WINE_VULKAN;
         pc5_controls_save(root, "orbital-nine", &k);
@@ -1601,7 +1601,7 @@ static void test_install(void)
         pw_wine_library_load(pw, root);
         profile = pw_wine_library_find(pw, "neondrift");
         CHECK(profile && profile->app.graphics == PW_APP_GRAPHICS_ZINK &&
-              strstr(profile->app.dll_overrides, "d3d8,d3d9,d3d10core,d3d11,dxgi,d3d12,d3d12core,amd_ags_x64=b") &&
+              strstr(profile->app.dll_overrides, "d3d8,d3d9,d3d10core,d3d11,dxgi,d3d12,d3d12core,amd_ags_x64,libxess,libxess_fg,libxell=b") &&
               !profile->debug_env_count, "WineD3D: Wine's DLLs, on OpenGL: %s", profile ? profile->app.dll_overrides : "-");
         k.graphics = PC5_GRAPHICS_WINE_VULKAN;
         pc5_controls_save(root, "neondrift", &k);
@@ -1610,7 +1610,7 @@ static void test_install(void)
         pw_wine_library_load(pw, root);
         profile = pw_wine_library_find(pw, "neondrift");
         CHECK(profile && profile->app.graphics == PW_APP_GRAPHICS_DXVK &&
-              strstr(profile->app.dll_overrides, "dxgi,d3d12,d3d12core,amd_ags_x64=b") && profile->debug_env_count == 1 &&
+              strstr(profile->app.dll_overrides, "dxgi,d3d12,d3d12core,amd_ags_x64,libxess,libxess_fg,libxell=b") && profile->debug_env_count == 1 &&
               !strcmp(profile->debug_env[0].name, "WINE_D3D_CONFIG") &&
               !strcmp(profile->debug_env[0].value, "renderer=vulkan") && !strcmp(profile->winedebug, "+d3d"),
               "WineD3D on Vulkan, with the game's channels: %s %s", profile ? profile->app.dll_overrides : "-",

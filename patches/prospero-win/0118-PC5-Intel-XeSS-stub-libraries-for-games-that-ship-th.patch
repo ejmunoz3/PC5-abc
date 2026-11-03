@@ -150,7 +150,7 @@ index 0000000..a1b2c3d
 +index 0000000..c3d4e5f
 +--- /dev/null
 ++++ b/dlls/libxell/libxell_main.c
-+@@ -0,0 +1,72 @@
++@@ -0,0 +1,71 @@
 ++/*
 ++ * Intel XeLL (XeSS Low Latency) stub library.
 ++ *
@@ -267,7 +267,7 @@ index 0000000..a1b2c3d
 +index 0000000..f6a7b8c
 +--- /dev/null
 ++++ b/dlls/libxess/libxess_main.c
-+@@ -0,0 +1,174 @@
++@@ -0,0 +1,187 @@
 ++/*
 ++ * Intel XeSS (Super Resolution) stub library.
 ++ *
@@ -500,7 +500,7 @@ index 0000000..a1b2c3d
 +index 0000000..d5e6f7a
 +--- /dev/null
 ++++ b/dlls/libxess_fg/libxess_fg_main.c
-+@@ -0,0 +1,179 @@
++@@ -0,0 +1,173 @@
 ++/*
 ++ * Intel XeSS-FG (Frame Generation) stub library.
 ++ *
