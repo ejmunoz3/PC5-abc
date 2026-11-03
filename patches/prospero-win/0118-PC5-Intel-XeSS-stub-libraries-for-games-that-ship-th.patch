@@ -21,8 +21,8 @@ replace the game's.
  PUBLICATION_ALLOWLIST.txt                     |   1 +
  THIRD_PARTY.md                                |   3 +
  docs/WINE_PS5_BUILD.md                        |   1 +
- ...stub-intel-xess-for-games-that-ship-them.patch | 613 +++++++++++++++++++++
- 4 files changed, 618 insertions(+)
+ ...stub-intel-xess-for-games-that-ship-them.patch | 607 +++++++++++++++++++++
+ 4 files changed, 612 insertions(+)
  create mode 100644 wine/patches/0950-stub-intel-xess-for-games-that-ship-them.patch
 
 diff --git a/PUBLICATION_ALLOWLIST.txt b/PUBLICATION_ALLOWLIST.txt
@@ -58,7 +58,7 @@ new file mode 100644
 index 0000000..a1b2c3d
 --- /dev/null
 +++ b/wine/patches/0950-stub-intel-xess-for-games-that-ship-them.patch
-@@ -0,0 +1,613 @@
+@@ -0,0 +1,607 @@
 +From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 +From: bornaradusin <bornaradusin@users.noreply.github.com>
 +Date: Mon, 2 Nov 2026 23:30:00 +0000
@@ -86,38 +86,32 @@ index 0000000..a1b2c3d
 +diff --git a/configure b/configure
 +--- a/configure
 ++++ b/configure
-+@@ -1243,6 +1243,9 @@ enable_kernelbase
-+ enable_ksecdd
-+ enable_ktmw32
++@@ -1243,4 +1243,7 @@ enable_ktmw32
++ enable_l3codeca_acm
 + enable_l3codecx_ax
 ++enable_libxell
 ++enable_libxess
 ++enable_libxess_fg
 + enable_loadperf
 + enable_localspl
-+ enable_localui
-+@@ -22413,6 +22416,9 @@ wine_fn_config_makefile dlls/ksecdd enable_ksecdd
-+ wine_fn_config_makefile dlls/ktmw32 enable_ktmw32
-+ wine_fn_config_makefile dlls/ktmw32/tests enable_tests
++@@ -22412,4 +22415,7 @@ wine_fn_config_makefile dlls/ktmw32 enable_ktmw32
++ wine_fn_config_makefile dlls/l3codeca.acm enable_l3codeca_acm
 + wine_fn_config_makefile dlls/l3codecx.ax enable_l3codecx_ax
 ++wine_fn_config_makefile dlls/libxell enable_libxell
 ++wine_fn_config_makefile dlls/libxess enable_libxess
 ++wine_fn_config_makefile dlls/libxess_fg enable_libxess_fg
 + wine_fn_config_makefile dlls/loadperf enable_loadperf
-+ wine_fn_config_makefile dlls/loadperf/tests enable_tests
 + wine_fn_config_makefile dlls/localspl enable_localspl
 +diff --git a/configure.ac b/configure.ac
 +--- a/configure.ac
 ++++ b/configure.ac
-+@@ -2858,6 +2858,9 @@ WINE_CONFIG_MAKEFILE(dlls/ksecdd)
-+ WINE_CONFIG_MAKEFILE(dlls/ktmw32)
-+ WINE_CONFIG_MAKEFILE(dlls/ktmw32/tests)
++@@ -2857,4 +2857,7 @@ WINE_CONFIG_MAKEFILE(dlls/ktmw32)
++ WINE_CONFIG_MAKEFILE(dlls/l3codeca.acm)
 + WINE_CONFIG_MAKEFILE(dlls/l3codecx.ax)
 ++WINE_CONFIG_MAKEFILE(dlls/libxell)
 ++WINE_CONFIG_MAKEFILE(dlls/libxess)
 ++WINE_CONFIG_MAKEFILE(dlls/libxess_fg)
 + WINE_CONFIG_MAKEFILE(dlls/loadperf)
-+ WINE_CONFIG_MAKEFILE(dlls/loadperf/tests)
 + WINE_CONFIG_MAKEFILE(dlls/localspl)
 +diff --git a/dlls/libxell/Makefile.in b/dlls/libxell/Makefile.in
 +new file mode 100644
