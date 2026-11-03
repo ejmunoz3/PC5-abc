@@ -316,7 +316,7 @@ int pc5_profile_text_at(const char *id, const Pc5Info *info, const char *argumen
      * always Wine's (patch 0978, Proton's): the game's own finds no driver, and Marvel's
      * Spider-Man Remastered then says the graphics driver is too old. Intel's upscaling
      * libraries (libxess.dll, libxess_fg.dll, libxell.dll), which a game may ship for
-     * Intel XeSS, are Wine's builtins (patch 1000): stubs that say "unsupported device"
+     * Intel XeSS, are Wine's builtins (patch 0950): stubs that say "unsupported device"
      * so the game falls back to FSR or native, since the console's AMD GPU has no Intel
      * driver and the game's own copies crash (EA Sports College Football 27). */
     const char *overrides = info->api == PC5_API_D3D12 ? "d3d8,d3d9,d3d10core,d3d11,d3d12,d3d12core,dxgi=n;amd_ags_x64,libxess,libxess_fg,libxell=b"
