@@ -1,0 +1,56 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ejmunoz3 <ejmunoz3@gmail.com>
+Date: Tue, 3 Nov 2026 17:00:00 +0000
+Subject: [PATCH] PC5: NtQueryInformationProcess handles a NULL process handle
+ (Wine patch 0966)
+
+Windows 10+ accepts NULL (0) as a process handle in
+NtQueryInformationProcess, treating it the same as NtCurrentProcess()
+(-1).  Wine sends it to the server, which returns STATUS_INVALID_HANDLE
+and leaves the caller's buffer unwritten.
+
+EA Sports College Football 27 (Frostbite engine) calls
+NtQueryInformationProcess(NULL, ProcessWow64Information, ...) during
+early initialisation.  The STATUS_INVALID_HANDLE leaves the stack buffer
+untouched, and a later read of that buffer dereferences
+0xFFFFFFFFFFFFFFFF and crashes.  Normalising NULL to the current process
+makes the call succeed.
+---
+ .../0966-ntdll-null-handle-as-current-process.patch | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 wine/patches/0966-ntdll-null-handle-as-current-process.patch
+
+diff --git a/wine/patches/0966-ntdll-null-handle-as-current-process.patch b/wine/patches/0966-ntdll-null-handle-as-current-process.patch
+new file mode 100644
+index 0000000..d841c78
+--- /dev/null
++++ b/wine/patches/0966-ntdll-null-handle-as-current-process.patch
+@@ -0,0 +1,26 @@
++From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
++From: prospero-win <prospero-win@invalid>
++Date: Tue, 3 Nov 2026 17:00:00 +0000
++Subject: [PATCH] ntdll: Treat a NULL process handle as the current process.
++
++Windows 10+ accepts NULL (0) as a process handle in
++NtQueryInformationProcess, treating it the same as NtCurrentProcess()
++(-1).  Wine sends it to the server, which returns STATUS_INVALID_HANDLE
++and leaves the caller's buffer unwritten.
++
++EA Sports College Football 27 (Frostbite engine) calls
++NtQueryInformationProcess(NULL, ProcessWow64Information, ...) during
++early initialisation.  The STATUS_INVALID_HANDLE leaves the stack buffer
++untouched, and a later read of that buffer dereferences
++0xFFFFFFFFFFFFFFFF and crashes.
++--- a/dlls/ntdll/unix/process.c
+++++ b/dlls/ntdll/unix/process.c
++@@ -1242,6 +1242,8 @@ NTSTATUS WINAPI NtQueryInformationProcess( HANDLE handle, PROCESSINFOCLASS class
++
++     TRACE( "(%p,0x%08x,%p,0x%08x,%p)\n", handle, class, info, size, ret_len );
++
+++    if (!handle) handle = NtCurrentProcess();
+++
++     switch (class)
++     {
++     case PW_QPC_PROCESS_INFO:
+--
+2.43.0
